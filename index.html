@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vacancia · El juego del Congreso peruano</title>
+<meta name="description" content="Juego gratis sobre el Congreso del Perú: vacancias, traiciones, escándalos y sucesión presidencial. Juega contra bots o con tus amigos.">
+<!-- Vista previa al compartir: cambia og.png por la URL completa (https://tu-dominio/og.png) cuando publiques -->
+<meta property="og:title" content="Vacancia · El juego del Congreso peruano">
+<meta property="og:description" content="130 escaños. Ninguno es leal. Juega gratis en tu navegador.">
+<meta property="og:image" content="og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Patrick+Hand&family=Big+Shoulders+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EFE3C6;--panel:#FBF4E2;--ink:#17202B;--muted:#5A6573;--line:#C5CCD4;--red:#C8102E;--gold:#A8832F;--neutral:#A6AEB7;
+--display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;--body:"IBM Plex Sans","Segoe UI",Roboto,Arial,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{color-scheme:light}
+*,*::before,*::after{box-sizing:inherit}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--body)}
+main{max-width:1120px;margin:0 auto;padding:14px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.05;letter-spacing:.01em}h1{font-size:clamp(40px,8vw,70px);font-weight:900}h2{font-size:24px}h3{font-size:19px}
+p{margin:.35em 0}.muted{color:var(--muted)}
+button,select,input{font:inherit;color:inherit}
+button{background:var(--ink);color:var(--bg);border:0;border-radius:6px;padding:8px 12px;font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}button.red{background:var(--red);color:#fff}
+button:disabled{opacity:.38;cursor:not-allowed}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+select,input{background:var(--panel);border:1.5px solid var(--line);border-radius:6px;padding:7px 9px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;gap:12px}@media(min-width:900px){.two{grid-template-columns:1.3fr 1fr}}
+.sash{display:inline-block;background:linear-gradient(90deg,var(--red) 0 33%,#fff 33% 66%,var(--red) 66%);height:10px;width:120px;border-radius:2px;border:1px solid var(--line)}
+.banner{padding:11px 13px;border-radius:8px;background:color-mix(in srgb,var(--gold) 18%,var(--panel));border:1px solid var(--gold)}
+.err{color:var(--red);font-weight:600}
+svg.hemi{width:100%;height:auto;display:block}
+table{width:100%;border-collapse:collapse;font-size:13.5px}th,td{padding:5px 4px;border-bottom:1px solid var(--line);text-align:center}th:first-child,td:first-child{text-align:left}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:9px;border:1px solid var(--line);margin:1px 2px;white-space:nowrap}
+.tag.p{border-color:var(--red);color:var(--red)}.tag.v{border-color:var(--gold)}
+.hand{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.card{border:1.5px solid var(--line);border-radius:9px;padding:9px;background:var(--bg);display:flex;flex-direction:column;gap:5px}.card h3{font-size:17px}.card p{font-size:12.5px;flex:1}
+.track{display:flex;gap:3px}.track span{flex:1;height:12px;border-radius:2px;background:var(--line)}.track span.on{background:var(--gold)}
+.log{max-height:240px;overflow:auto;font-size:13px;margin:0;padding-left:18px}.log li{margin:2px 0}
+.stat{text-align:center}.stat b{display:block;font-family:var(--display);font-size:30px;line-height:1}.stat small{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+details summary{cursor:pointer;font-weight:600}
+.tw{overflow-x:auto;max-width:100%}.sm{display:none}
+@media (max-width:600px){main{padding:10px}.lg{display:none}.sm{display:inline}table{font-size:12.5px}th,td{padding:4px 3px}.stat b{font-size:24px}.stats{gap:3px}.panel{padding:10px}h2{font-size:21px}.tag{font-size:10.5px;padding:0 5px}.hand{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}button{padding:8px 10px}}
+.stamp{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:9}
+body{background-image:radial-gradient(#d9c9a3 1.2px,transparent 1.3px);background-size:14px 14px}
+.fx-t{font-family:Bangers,"Luckiest Guy",Impact,sans-serif;letter-spacing:1px}
+h1,h2{font-family:Bangers,var(--display);letter-spacing:1px;font-weight:400}
+.panel{border:2px solid #1d1a17;box-shadow:3px 3px 0 rgba(29,26,23,.85)}
+.banner{border:2px solid #1d1a17;box-shadow:3px 3px 0 rgba(29,26,23,.85)}
+button{border:2px solid #1d1a17;box-shadow:2px 2px 0 rgba(29,26,23,.9);transition:transform .08s}
+button:active{transform:translate(2px,2px);box-shadow:none}
+.news{margin:0 0 10px;padding:8px 12px;border:3px double #1d1a17;border-radius:4px;background:#fffdf5;color:#1d1a17;display:flex;gap:10px;align-items:center;animation:newsIn .7s ease-out}
+.news.still{animation:none}
+.news .h{font-family:Bangers,Impact,sans-serif;font-size:24px;line-height:1.05;letter-spacing:.5px}
+@keyframes newsIn{0%{transform:rotate(-540deg) scale(.1);opacity:0}100%{transform:none;opacity:1}}
+.oto{animation:bob 2.4s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-4px)}}
+.seatpop{animation:pop .9s ease-out}@keyframes pop{0%{transform:scale(1.8)}60%{transform:scale(.9)}100%{transform:scale(1)}}
+#fxLayer{position:fixed;inset:0;pointer-events:none;z-index:20}
+.fx-ov{position:absolute;inset:0;background:rgba(29,26,23,.55);display:flex;align-items:center;justify-content:center;animation:fade .25s}
+.fx-box{background:#fffdf5;border:3px solid #1d1a17;box-shadow:5px 5px 0 #1d1a17;border-radius:12px;padding:16px 18px;min-width:280px;max-width:92vw;text-align:center;color:#1d1a17}
+.fx-dice{font-size:54px;animation:roll .9s ease-out}@keyframes roll{0%{transform:rotate(0) scale(.4)}70%{transform:rotate(700deg) scale(1.2)}100%{transform:rotate(720deg) scale(1)}}
+.fx-bar{display:grid;grid-template-columns:80px 1fr 34px;align-items:center;gap:8px;margin:6px 0;font-weight:700}
+.fx-bar i{display:block;height:16px;border:2px solid #1d1a17;border-radius:4px;width:0;animation:grow .9s .9s forwards}@keyframes grow{to{width:var(--w)}}
+.fx-res{font-family:Bangers,Impact,sans-serif;font-size:40px;opacity:0;animation:fade .3s 1.6s forwards}.fx-res.ok{color:#2e8b57}.fx-res.ko{color:#c8102e}
+.fx-sub{font-weight:700;color:#c8102e;opacity:0;animation:fade .3s 1.8s forwards}
+.fx-cards{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.fx-vc{width:74px;perspective:500px;opacity:1}.fx-vc small{display:block;font-size:11px;margin-top:4px}
+.fx-in{position:relative;height:96px;transform-style:preserve-3d;animation:flip .5s forwards;animation-delay:inherit}
+.fx-vc .fx-in{animation-delay:inherit}.fx-vc{animation:none}
+.fx-fr,.fx-bk{position:absolute;inset:0;border:2px solid #1d1a17;border-radius:8px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;font-family:Bangers,Impact,sans-serif;font-size:17px}
+.fx-fr{background:#2f5da8;color:#fff;font-size:38px}.fx-bk{transform:rotateY(180deg);color:#fff}.fx-bk.si{background:#2e8b57}.fx-bk.no{background:#c8102e}.fx-bk.abs{background:#6b6b6b}
+@keyframes flip{to{transform:rotateY(180deg)}}
+.fx-money span{position:absolute;top:-40px;font-size:34px;animation:fall 1.8s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+.fx-toast{position:absolute;top:14px;left:50%;transform:translateX(-50%);background:#fffdf5;border:2px solid #1d1a17;box-shadow:3px 3px 0 #1d1a17;border-radius:10px;padding:8px 14px;font-weight:700;color:#1d1a17;animation:drop .35s ease-out;max-width:92vw;text-align:center}
+@keyframes drop{from{transform:translate(-50%,-60px)}}@keyframes fade{from{opacity:0}to{opacity:1}}
+.card{border:2px solid #1d1a17;box-shadow:2px 2px 0 #1d1a17;background:#fffdf5;padding:0;overflow:hidden}.card h3{font-family:Bangers,Impact,sans-serif;font-weight:400;font-size:19px;letter-spacing:.5px;color:#fff;background:var(--cc,#c8102e);margin:0;padding:6px 9px;border-bottom:2px solid #1d1a17}
+.card p{color:#1d1a17;font-size:14px;line-height:1.35;flex:1}.card small{color:#5b4a33;font-size:12.5px}.card select{background:#fff;color:#1d1a17}
+.card p,.card small,.card select,.card button{margin:6px 9px}.card button{margin-top:0;margin-bottom:9px}
+.card.t-passive{--cc:#2f5da8}.card.t-crisis_own,.card.t-crisis_other{--cc:#e07a1f}.card.t-vote{--cc:#7b4fa3}.card.sp{--cc:#b8860b}
+@media (prefers-reduced-motion:reduce){.news,.oto,.seatpop{animation:none}}
+.stamp div{font-family:var(--display);font-weight:900;font-size:clamp(60px,15vw,150px);color:var(--red);border:10px solid var(--red);padding:0 26px;transform:rotate(-12deg);opacity:0;animation:st 1.8s ease-out forwards;background:color-mix(in srgb,var(--panel) 70%,transparent)}
+@keyframes st{0%{opacity:0;transform:rotate(-12deg) scale(2.2)}15%{opacity:1;transform:rotate(-12deg) scale(1)}80%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.stamp div{animation:none;opacity:0}}
+</style>
+</head>
+<body>
+<script>if(!window.structuredClone)window.structuredClone=o=>JSON.parse(JSON.stringify(o));</script>
+<main id="app"><div style="padding:28px 0"><h1 style="font-family:var(--display);font-size:56px;margin:0">Vacancia</h1><p style="font-size:17px;max-width:40ch"><b>Si ves este mensaje, el visor donde abriste el archivo no puede ejecutar el juego</b> (pasa en la vista previa de WhatsApp, Archivos o correo del iPhone).</p><p style="font-size:16px;max-width:44ch">Ábrelo con un navegador: en computadora, con doble clic (Chrome, Edge, Safari o Firefox). En celular, lo mejor es abrir el enlace web del juego.</p></div></main>
+<noscript><p style="padding:0 14px">Este visor tiene JavaScript desactivado: el juego no puede funcionar aquí.</p></noscript><div id="stampLayer"></div>
+<footer style="max-width:1120px;margin:0 auto;padding:18px 14px 30px;font-size:12.5px;color:var(--muted)">Vacancia es un juego de sátira política. Todos los personajes, bancadas, programas y cartas son ficticios; las reglas institucionales se basan en la Constitución y el Reglamento del Congreso del Perú. · <a href="privacidad.html" style="color:inherit">Privacidad</a> · <a href="novedades.html" style="color:inherit">Novedades</a></footer><div id="fxLayer"></div><div id="modal" style="position:fixed;inset:0;z-index:30;pointer-events:none"></div>
+<script src="config.js"></script>
+<script>window.NetReady=new Promise(r=>{window.__netResolve=r;setTimeout(()=>r(window.Net||{ok:false}),8000)});</script>
+<script type="module" src="net.js"></script>
+<script src="engine.js"></script>
+<script>
+const $app=document.getElementById("app");
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}function lsSet(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
+const {P,nm}=V2;
+let mode=null, S=null, me=null, db=null, uid=null, ref=null, unsub=null, code=null, ui={msg:"",t:{},amarrar:1,moc:"vacancia",mocT:"",lastStamp:null};
+/* ---------- almacenamiento: local u online ---------- */
+async function commit(fn0){const fn=s=>{const e=fn0(s);if(!e)s.lastWrite=Date.now();return e};
+ if(mode==="local"){const s=structuredClone(S);const e=fn(s);if(e){ui.msg=e;render();return}ui.msg="";S=s;saveLocal();maybeStamp();afterChange();render();scheduleBots();return}
+ const e=await Net.update(code,fn);ui.msg=e||"";render()}
+let botTimer=null;
+setInterval(()=>{if(mode==="online"&&S&&S!=="missing"&&S.phase!=="fin"&&S.phase!=="lobby")scheduleBots()},5000);
+setInterval(()=>{if(mode==="online"&&S&&S!=="missing"&&S.phase!=="fin"&&S.phase!=="lobby"){const ae=document.activeElement;if(!(ae&&(ae.tagName==="INPUT"||ae.tagName==="SELECT")))render()}},15000);
+function scheduleBots(){clearTimeout(botTimer);if(!S||S.phase==="fin"||S.phase==="lobby")return;if(ui.fxBusy&&mode==="local"){botTimer=setTimeout(scheduleBots,300);return}
+ const hostGone=mode==="online"&&S.host!==uid&&P(S,uid)&&S.lastWrite&&Date.now()-S.lastWrite>20000;const isHost=mode==="local"||(S.host===uid)||hostGone;if(!isHost)return;
+ botTimer=setTimeout(()=>{commit(s=>{if(!V2.botStep(s))return"__noop"}).then(()=>{if(ui.msg==="__noop"){ui.msg="";render()}})},mode==="local"?350:900)}
+/* ---------- inicio ---------- */
+async function boot(){render();
+ const n=await window.NetReady;if(n&&n.ok){db=true;uid=n.uid}
+ let pc=null;try{pc=new URLSearchParams(location.search).get("p")}catch(e){}
+ const saved=pc||lsGet("cinco2-code");if(db&&uid&&saved)openGame(saved);else render()}
+const BASEMODS={gobierno:false,prensa:false,escandalos:false,bicameral:false,leyes:false,golpe:false};
+function modsFromUI(){const m=Object.assign({},BASEMODS);document.querySelectorAll("[data-mod]").forEach(c=>{m[c.dataset.mod]=c.checked});return m}
+function optsFromUI(){return{rapido:!!document.getElementById("opRap")?.checked,timer:!!document.getElementById("opTim")?.checked}}
+function modPicker(cur){return`<div class="row" style="margin-top:8px">${Object.entries(V2.MODS).map(([k,l])=>`<label style="font-size:13.5px"><input type="checkbox" data-mod="${k}" ${cur&&cur[k]?"checked":""}> ${l}</label>`).join("")}</div>
+<div class="row" style="margin-top:6px"><label style="font-size:13.5px"><input type="checkbox" id="opRap" ${ui.opts&&ui.opts.rapido?"checked":""}> Modo rápido (con Bicameral: 1 legislatura por año)</label><label style="font-size:13.5px"><input type="checkbox" id="opTim" ${ui.opts&&ui.opts.timer?"checked":""}> Temporizador de 60 s por turno</label></div><p class="muted" style="font-size:13px">Sin marcar nada juegas el <b>juego base</b> (recomendado para la primera partida).</p>`}
+function newLocal(name,nb,mods,opts){opts=opts||{};const s={phase:"lobby",order:["h"],players:{h:{name:(name||"").trim()||"Tu bancada",bot:false}},log:[],host:"h",mods:mods||BASEMODS,opts};
+ const bn=["Bancada Naranja","Frente Andino","Alianza del Pueblo","Renovación Costeña"];for(let i=0;i<nb;i++){s.order.push("b"+i);s.players["b"+i]={name:bn[i],bot:true}}
+ mode="local";me="h";V2.setup(s,{mods:s.mods,rapido:!!opts.rapido});s.cfg.timer=!!opts.timer;s.t0=Date.now();s.gid=Math.random().toString(36).slice(2,10);S=s;render();scheduleBots()}
+function openGame(c){code=c.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);if(!code)return;mode="online";me=uid;
+ if(unsub)unsub();S=null;lsSet("cinco2-code",code);render();
+ unsub=Net.watch(code,d=>{S=d||"missing";maybeStamp();afterChange();render();scheduleBots()},()=>{ui.msg="Se perdió la conexión.";render()})}
+async function createOnline(name){const c=Array.from({length:5},()=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random()*32)]).join("");
+ const s={v:1,phase:"lobby",host:uid,order:[uid],players:{[uid]:{name:(name||"").trim().slice(0,24)||"Bancada 1",bot:false}},log:[],mods:modsFromUI(),opts:optsFromUI()};
+ try{await Net.create(c,s)}catch(e){ui.msg="No se pudo crear la partida. Intenta de nuevo.";render();return}openGame(c)}
+function saveLocal(){if(mode!=="local"||!S||S==="missing")return;try{if(S.phase==="fin")localStorage.removeItem("vacancia-save");else localStorage.setItem("vacancia-save",JSON.stringify({s:S,tut:!!ui.tutorial,seen:ui.seen||{}}))}catch(e){}}
+function loadLocal(){try{const r=localStorage.getItem("vacancia-save");return r?JSON.parse(r):null}catch(e){return null}}
+function resumeLocal(){const d=loadLocal();if(!d)return;mode="local";me="h";S=d.s;ui.tutorial=d.tut;ui.seen=d.seen||{};render();scheduleBots()}
+function inviteLink(){let base="";try{base=location.origin&&location.origin!=="null"?location.origin+location.pathname:location.href.split("?")[0]}catch(e){}return base+"?p="+code}
+function leave(){if(unsub)unsub();unsub=null;mode=null;S=null;code=null;lsSet("cinco2-code",null);clearTimeout(botTimer);render()}
+function maybeStamp(){if(S&&S!=="missing"&&S.stamp){const k=S.stamp.y+":"+S.stamp.nw;ui.lastStamp=k}else if(S&&S!=="missing"&&!ui.lastStamp)ui.lastStamp="none"}
+/* ---------- vistas ---------- */
+function hero(){return`<section style="padding:22px 0 14px"><div class="row" style="justify-content:space-between"><div class="sash"></div><div class="row">${soundToggles()}</div></div><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">${otorongoSVG(96,"",true)}<div style="flex:1;min-width:220px"><h1 style="margin:0">Vacancia</h1><p><span class="tag">${esc((window.CINCO_CONFIG||{}).version||"Beta")}</span> <span class="muted" style="font-size:13px">Reglas en prueba: tu opinión las cambia.</span></p>${supportButtons(false)}<p style="max-width:62ch;font-size:16.5px">El hemiciclo tiene 130 escaños y ninguno es leal. Al cerrar el quinto año gana quien sume más: con la banda presidencial (por elección, sucesión o encargo) o cumpliendo tu agenda secreta.</p></div></div></section>`}
+function rules(){const on=k=>S&&S!=="missing"&&S.cfg&&S.cfg.mods&&S.cfg.mods[k];return`<details class="panel" style="margin-top:12px"><summary>Reglas del juego base</summary><ul style="max-width:75ch">
+<li><b>Meta:</b> al cerrar el año 5 se cuentan puntos: <b>banda presidencial +4</b>, ajustada por su origen (juego base: +2 si ganó en las urnas; juego completo: +1 si ganó en las urnas, +1 si llegó como vicepresidente y −1 si es encargado), <b>agenda secreta cumplida</b> (+6 con 3 jugadores; +5 con 4–5 en el base y +4 en el completo), +1 por cada 8 de Influencia y −1 por cada 2 escándalos. Gana quien sume más (en empate, quien tenga la banda).</li>
+<li><b>Inicio:</b> todas las bancadas empiezan iguales. Elección presidencial: cada uno aporta Influencia a su candidatura o a la de un aliado; se suma la carta de Campaña. El aliado que más aportó a la plancha ganadora es 1.er vicepresidente.</li>
+<li><b>Cada año:</b> evento, ingresos, elección de la Presidencia del Congreso y una ronda de turnos que termina en votación.</li>
+<li><b>Tu turno:</b> abres un expediente (Crisis, Oportunidad o Escándalo) y haces una acción: fichar independiente (4), amarrar independientes (2 c/u), control de daños (3), jugar una carta o presentar una moción.</li>
+<li><b>Crisis:</b> los demás responden en secreto (apoyar, sabotear o apuñalar) y todo se revela al resolver. El presidente suma el aparato del Estado a sus Crisis.</li>
+<li><b>Vacancia:</b> firmas 8, admisión 11, aprobación 18 bloques y 8 de 12 senadores. Voto secreto con abstención. Si pasa, quienes votaron en contra pierden 1 de Influencia y el vacado recibe 2 escándalos.</li>
+<li><b>Sucesión:</b> 1.er VP, luego 2.º VP, luego el presidente del Congreso como encargado (se le saca con censura de 14 bloques; si asume con 2 o más años por delante, convoca elecciones).</li>
+<li><b>Renuncia:</b> con una vacancia en votación, el presidente puede renunciar y conservar su Influencia.</li>
+<li><b>Presidente:</b> reparte 1 punto de obras por año (+1 de Influencia a otra bancada).</li>
+<li><b>Moción gratis:</b> en el juego base (y en el modo rápido), tu primera moción de vacancia o de censura al encargado de cada año no cuesta Influencia.</li>
+<li><b>Sabotaje rentable:</b> si saboteas una Crisis y fracasa, ganas +1 de Influencia.</li>
+<li><b>Indisciplina:</b> con 2 o más escándalos, 1 de tus bloques vota por su cuenta.</li>
+<li><b>Habilidades de bancada:</b> ☀ Sol (+2 de Influencia inicial), ⛰ Montaña (fichar cuesta 3), 🌊 Ola (+1 al dado en sus Crisis), ★ Estrella (inmune al transfuguismo y sin díscolos), ✚ Chakana (vacancia y censuras cuestan 1).</li>
+<li><b>Agenda secreta:</b> cada bancada tiene un objetivo oculto; cumplirlo suma entre 4 y 6 puntos en el recuento final, según el número de jugadores. Es una ruta real de victoria sin tener la banda.</li>
+<li><b>Comisiones (año 1):</b> subasta secreta de Fiscalización, Presupuesto y Constitución.</li>
+<li><b>Pasos Perdidos:</b> al robar, eliges una de las 3 cartas visibles o robas a ciegas.</li>
+<li><b>Desgaste:</b> desde su tercer año seguido, las Crisis del presidente tienen +1 de dificultad.</li>
+<li><b>Premier:</b> quien asume tras una caída nombra un Premier, que pide la confianza del Congreso (14). Si el gobierno llega al año 5, el Premier recibe +3 y limpia sus escándalos.</li></ul>
+<p style="margin:8px 0 4px"><b>Expansiones</b>${S&&S!=="missing"&&S.cfg?" (activas en esta partida marcadas con ✓)":""}</p><ul style="max-width:75ch">
+<li>${on("gobierno")?"✓ ":""}<b>Palacio de Gobierno:</b> gabinete y saltos del barco, cuestión de confianza, censura, interpelación, disolución de Diputados y acusación constitucional.</li>
+<li>${on("prensa")?"✓ ":""}<b>Cuarto Poder:</b> Reportaje dominical, Unidad de investigación, Filtración de chats y Demanda por difamación.</li>
+<li>${on("escandalos")?"✓ ":""}<b>Escándalos:</b> cartas de corrupción (Asesor de confianza, Financista generoso…) y las 11 ★ Especiales.</li>
+<li>${on("bicameral")?"✓ ":""}<b>Bicameral:</b> elecciones generales (lista y campaña con efecto arrastre), segunda vuelta, presidencias del Senado y de Diputados, dos legislaturas por año.</li>
+<li>${on("leyes")?"✓ ":""}<b>Leyes con nombre propio:</b> proceso legislativo, observación e insistencia, leyes de autoblindaje y Senador tránsfuga.</li>
+<li>${on("golpe")?"✓ ":""}<b>5 de Abril:</b> el autogolpe, con sus consecuencias.</li>
+<li><b>Modo rápido</b> (opcional): con Bicameral, una sola legislatura por año; dura como el juego base.</li><li><b>Temporizador</b> (opcional): 60 segundos por turno; al acabarse, pasas.</li></ul></details>`}
+const CFGX=window.CINCO_CONFIG||{};
+const SUPPORT={yapeQR:CFGX.yapeQR||"",yapeName:CFGX.yapeName||"",yapeNumero:CFGX.yapeNumero||"",kofi:CFGX.kofi||"",fbWa:CFGX.feedbackWhatsApp||"",fbEmail:CFGX.feedbackEmail||""};
+/* ---------- botones de apoyo: Yape y mejora del juego ---------- */
+function supportButtons(compact){return compact?`<button class="ghost" id="byape" title="Yapéanos un café" style="padding:6px 9px">☕</button><button class="ghost" id="bmejora" title="Ayúdanos a mejorar el juego" style="padding:6px 9px">💡</button>`
+ :`<div class="row" style="margin:8px 0"><button id="byape" style="background:#6c2bd9;color:#fff">☕ Yapéanos un café</button><button id="bmejora" style="background:#2e8b57;color:#fff">💡 Ayúdanos a mejorar el juego</button></div>`}
+function showModal(html){const m=document.getElementById("modal");m.innerHTML=`<div class="fx-ov" style="pointer-events:auto" id="mbg"><div class="fx-box" style="text-align:left;max-height:88vh;overflow:auto">${html}<div class="row" style="margin-top:10px;justify-content:flex-end"><button class="ghost" id="mclose">Cerrar</button></div></div></div>`;
+ document.getElementById("mclose").onclick=closeModal;document.getElementById("mbg").onclick=e=>{if(e.target.id==="mbg")closeModal()}}
+function closeModal(){document.getElementById("modal").innerHTML=""}
+function yapeModal(){showModal(`<h2 style="margin:0">☕ Yapéanos un café</h2><p>Vacancia es gratis. Si te hizo reír (o renegar), cualquier aporte nos ayuda a seguir creándolo.</p>
+ <div style="text-align:center">${SUPPORT.yapeQR?`<img src="${SUPPORT.yapeQR}" alt="Código QR de Yape" style="width:220px;max-width:100%;border:2px solid #1d1a17;border-radius:10px">`:`<div style="width:220px;height:220px;margin:0 auto;border:2px dashed #b9a57a;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#6b5a3e">QR de Yape próximamente</div>`}
+ ${SUPPORT.yapeName?`<p style="margin:6px 0 0"><b>${esc(SUPPORT.yapeName)}</b></p>`:""}${SUPPORT.yapeNumero?`<p style="margin:2px 0">Yape / Plin: <b>${esc(SUPPORT.yapeNumero)}</b></p>`:""}</div>
+ <p class="muted" style="font-size:13px">Escanea el QR con Yape o con la app de tu banco (BCP, BBVA, Interbank, Scotiabank y otras).</p>
+ <p><b>¿Estás fuera del Perú?</b> ${SUPPORT.kofi?`<a href="${SUPPORT.kofi}" target="_blank" rel="noopener">Invítanos un café en Ko-fi</a> (tarjeta o PayPal).`:"Pronto podrás apoyar con tarjeta o PayPal."}</p>`)}
+function feedbackModal(){const s=S&&S!=="missing"?S:null;showModal(`<h2 style="margin:0">💡 Ayúdanos a mejorar Vacancia</h2><p class="muted" style="font-size:13px">Es una beta: tus respuestas deciden qué cambiamos. Son anónimas.</p>
+ <p style="margin:8px 0 4px"><b>¿Qué tan divertido te pareció?</b></p><div class="row">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="md" value="${n}" ${n===4?"checked":""}> ${"⭐".repeat(n)}</label>`).join("")}</div>
+ <p style="margin:10px 0 4px"><b>¿Qué te confundió o sobra?</b></p><textarea id="ms" maxlength="500" rows="3" style="width:100%"></textarea>
+ <p style="margin:10px 0 4px"><b>¿Qué le falta o qué te gustaría ver?</b></p><textarea id="mf" maxlength="500" rows="3" style="width:100%"></textarea>
+ <div class="row" style="margin-top:10px"><button id="msend" style="background:#2e8b57;color:#fff">Enviar</button><span id="mmsg" class="muted"></span></div>`);
+ document.getElementById("msend").onclick=()=>{const d=+((document.querySelector('input[name="md"]:checked')||{}).value||4);const so=document.getElementById("ms").value.slice(0,500),fa=document.getElementById("mf").value.slice(0,500);
+  const ver=(window.CINCO_CONFIG||{}).version||"Beta";const done=t=>{document.getElementById("mmsg").textContent=t};
+  if(db&&window.Net&&Net.saveFeedback){Net.saveFeedback({version:ver,mods:s&&s.cfg?Object.keys(s.cfg.mods).filter(m=>s.cfg.mods[m]):[],jugadores:s?s.order.length:0,diversion:d,sobra:so,falta:fa}).then(()=>done("¡Gracias! Lo leeremos todo.")).catch(()=>done("No se pudo enviar. Intenta más tarde."));return}
+  const txt=`Opinión sobre Vacancia (${ver})\nDiversión: ${d}/5\nMe confundió o sobra: ${so||"-"}\nLe falta: ${fa||"-"}`;
+  if(SUPPORT.fbWa){window.open("https://wa.me/"+SUPPORT.fbWa.replace(/[^0-9]/g,"")+"?text="+encodeURIComponent(txt),"_blank");done("Se abrió WhatsApp con tu opinión: solo pulsa enviar.");return}
+  if(SUPPORT.fbEmail){location.href="mailto:"+SUPPORT.fbEmail+"?subject="+encodeURIComponent("Opinión sobre Vacancia")+"&body="+encodeURIComponent(txt);return}
+  try{navigator.clipboard.writeText(txt);done("Copiado. Pégalo y envíalo a quien te compartió el juego.")}catch(e){done(txt)}}}
+function bindSupport(){const a=document.getElementById("byape"),b=document.getElementById("bmejora");if(a)a.onclick=yapeModal;if(b)b.onclick=feedbackModal}
+function supportPanel(){return`<div class="panel" style="margin-top:12px;border-left:6px solid var(--gold)"><h3>☕ Apoya el juego</h3><p>Vacancia es gratis. Si te gustó, invítanos un café.</p>
+ <div class="grid two" style="margin-top:6px"><div><b>Desde Perú: Yape o Plin</b><p class="muted" style="font-size:13px">Escanea el QR con Yape o con la app de tu banco (BCP, BBVA, Interbank, Scotiabank y otras).</p>${SUPPORT.yapeQR?`<img src="${SUPPORT.yapeQR}" alt="Código QR de Yape" style="width:180px;max-width:100%;border-radius:8px">`:`<div style="width:180px;height:180px;border:2px dashed var(--line);border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:var(--muted)">Aquí irá el QR de Yape</div>`}${SUPPORT.yapeName?`<p style="font-size:13px">A nombre de: ${esc(SUPPORT.yapeName)}</p>`:""}</div>
+ <div><b>Desde el extranjero</b><p class="muted" style="font-size:13px">Con tarjeta o PayPal.</p>${SUPPORT.kofi?`<a href="${SUPPORT.kofi}" target="_blank" rel="noopener"><button>Invítanos un café en Ko-fi</button></a>`:`<button disabled>Ko-fi (enlace pendiente)</button>`}</div></div></div>`}
+function renderStart(){const sv=loadLocal();
+ $app.innerHTML=`${hero()}${sv&&sv.s&&sv.s.phase!=="fin"?`<div class="banner" style="margin-bottom:12px">Tienes una partida contra bots guardada (año ${sv.s.year||0} de 5). <button id="bres2">Continuar</button> <button class="ghost" id="bdel">Descartar</button></div>`:""}<div class="grid two">
+ <div class="panel"><h2>Probar contra bots</h2><p class="muted">En este dispositivo. Sirve para aprender y calibrar.</p>
+  <div class="row"><input id="ln" placeholder="Nombre de tu bancada" maxlength="24"><select id="nb">${[2,3,4].map(n=>`<option value="${n}" ${n===3?"selected":""}>${n} bots</option>`).join("")}</select><button id="bl">Jugar</button><button class="ghost" id="btut">Aprender a jugar (tutorial)</button></div>${modPicker(ui.mods)}</div>
+ <div class="panel"><h2>Partida online</h2>${db&&uid?`<div class="row"><input id="on" placeholder="Nombre de tu bancada" maxlength="24"><button id="bc">Crear</button></div><div class="row" style="margin-top:8px"><input id="cd" placeholder="Código" maxlength="6" style="width:110px;text-transform:uppercase"><button class="ghost" id="bo">Entrar</button></div><p class="muted" style="font-size:13px">Al crear, se usan las expansiones marcadas en el panel de bots.</p>`:`<p class="muted">${window.CINCO_CONFIG&&window.CINCO_CONFIG.firebase&&window.CINCO_CONFIG.firebase.apiKey?"Conectando… si no aparece, revisa tu conexión.":"El modo online aún no está configurado en este servidor."}</p>`}</div></div>
+ ${ui.msg?`<p class="err">${esc(ui.msg)}</p>`:""}${rules()}`;
+ const br=document.getElementById("bres2");if(br){br.onclick=resumeLocal;document.getElementById("bdel").onclick=()=>{try{localStorage.removeItem("vacancia-save")}catch(e){}render()}}
+ document.getElementById("btut").onclick=()=>{ui.tutorial=true;ui.seen={};ui.coachOff=false;newLocal(document.getElementById("ln").value||"Tu bancada",3,BASEMODS,{})};
+ document.getElementById("bl").onclick=()=>{const m=modsFromUI();const o=optsFromUI();ui.mods=m;ui.opts=o;newLocal(document.getElementById("ln").value,+document.getElementById("nb").value,m,o)};
+ const bc=document.getElementById("bc");if(bc){bc.onclick=()=>createOnline(document.getElementById("on").value);document.getElementById("bo").onclick=()=>openGame(document.getElementById("cd").value)}}
+/* ===================== ARTE, ANIMACIÓN Y SONIDO (capa 1, provisional) =====================
+   Para reemplazar por arte y sonido finales del estudio, define en la configuración:
+   window.VACANCIA_ASSETS={music:"url.mp3", sfx:{gavel:"url",stamp:"url",...}, otorongo:"url.svg|png"} */
+const ASSETS=window.VACANCIA_ASSETS||{};
+/* ---------- sonido sintetizado ---------- */
+const SND=(()=>{let ac=null,master=null,musicGain=null,musicTimer=null,step=0;
+ const pref=k=>{try{return localStorage.getItem("vacancia-"+k)!=="0"}catch(e){return true}};
+ const st={sfx:pref("sfx"),music:pref("music"),started:false};
+ function ctx(){if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;ac=new C();master=ac.createGain();master.gain.value=.5;master.connect(ac.destination)}if(ac.state==="suspended")ac.resume();return ac}
+ function tone(f,d,type,vol,when,glide){const a=ctx();if(!a)return;const t=a.currentTime+(when||0);const o=a.createOscillator(),g=a.createGain();o.type=type||"sine";o.frequency.setValueAtTime(f,t);if(glide)o.frequency.exponentialRampToValueAtTime(glide,t+d);g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||.2,t+.01);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.05)}
+ function noise(d,vol,when,filt,freq,trem){const a=ctx();if(!a)return;const t=a.currentTime+(when||0);const n=Math.floor(a.sampleRate*d),buf=a.createBuffer(1,n,a.sampleRate),ch=buf.getChannelData(0);for(let i=0;i<n;i++){let v=Math.random()*2-1;if(trem)v*=0.5+0.5*Math.sin(i/a.sampleRate*trem*Math.PI*2);ch[i]=v*(1-i/n)}
+  const s=a.createBufferSource();s.buffer=buf;const g=a.createGain();g.gain.value=vol||.2;let node=s;if(filt){const f=a.createBiquadFilter();f.type=filt;f.frequency.value=freq||1000;s.connect(f);node=f}node.connect(g);g.connect(master);s.start(t)}
+ const synth={
+  gavel(){tone(110,.18,"triangle",.5);noise(.08,.35,0,"lowpass",900);tone(90,.15,"triangle",.4,.22);noise(.06,.3,.22,"lowpass",800)},
+  stamp(){tone(70,.35,"sine",.7,0,40);noise(.25,.45,0,"lowpass",600)},
+  drum(){noise(1.1,.22,0,"bandpass",300,22);tone(60,.2,"sine",.4,1.1)},
+  flip(){noise(.05,.25,0,"highpass",2500)},
+  dice(){for(let i=0;i<6;i++)noise(.04,.25,i*.09,"bandpass",1800)},
+  coins(){[1320,1760,2093].forEach((f,i)=>tone(f,.12,"triangle",.15,i*.07))},
+  applause(){for(let i=0;i<4;i++)noise(.5,.12,i*.12,"bandpass",2000,30)},
+  boo(){tone(220,.8,"sawtooth",.12,0,110);tone(165,.8,"sawtooth",.1,.05,82)},
+  ping(){tone(880,.12,"sine",.25);tone(1318,.2,"sine",.22,.12)},
+  win(){[523,659,784,1046].forEach((f,i)=>tone(f,.35,"triangle",.22,i*.14))},
+  lose(){[392,330,262].forEach((f,i)=>tone(f,.4,"triangle",.2,i*.18))}};
+ function play(name){if(!st.sfx)return;if(ASSETS.sfx&&ASSETS.sfx[name]){try{const au=new Audio(ASSETS.sfx[name]);au.volume=.7;au.play()}catch(e){}return}try{synth[name]&&synth[name]()}catch(e){}}
+ /* música original: vals criollo satírico en La menor (loop de 8 compases) */
+ const MEL=[69,72,76,72,74,71,67,71,69,72,76,79,77,76,74,72,71,74,77,74,76,72,69,72,71,74,71,68,69,0,69,0];
+ const BAS=[45,52,52,43,50,50,40,47,47,45,52,52,41,48,48,41,48,48,40,47,47,45,52,52,40,47,47,45,52,45,45,0];
+ const hz=m=>440*Math.pow(2,(m-69)/12);let au=null;
+ function startMusic(){if(!st.music||musicTimer||au)return;if(ASSETS.music){try{au=new Audio(ASSETS.music);au.loop=true;au.volume=.35;au.play()}catch(e){}return}
+  const a=ctx();if(!a)return;musicGain=a.createGain();musicGain.gain.value=.12;musicGain.connect(master);step=0;let next=a.currentTime+.1;const beat=60/150;
+  musicTimer=setInterval(()=>{while(next<a.currentTime+.3){const i=step%32;const m=MEL[i],b=BAS[i];
+   if(m){const o=a.createOscillator(),g=a.createGain();o.type="triangle";o.frequency.value=hz(m);g.gain.setValueAtTime(.0001,next);g.gain.exponentialRampToValueAtTime(.5,next+.01);g.gain.exponentialRampToValueAtTime(.0001,next+beat*.9);o.connect(g);g.connect(musicGain);o.start(next);o.stop(next+beat)}
+   if(b&&i%3===0){const o=a.createOscillator(),g=a.createGain();o.type="sine";o.frequency.value=hz(b);g.gain.setValueAtTime(.0001,next);g.gain.exponentialRampToValueAtTime(.7,next+.01);g.gain.exponentialRampToValueAtTime(.0001,next+beat*1.6);o.connect(g);g.connect(musicGain);o.start(next);o.stop(next+beat*1.7)}
+   if(i%3!==0){const n=Math.floor(a.sampleRate*.03),buf=a.createBuffer(1,n,a.sampleRate),ch=buf.getChannelData(0);for(let k=0;k<n;k++)ch[k]=(Math.random()*2-1)*(1-k/n);const sN=a.createBufferSource();sN.buffer=buf;const f=a.createBiquadFilter();f.type="highpass";f.frequency.value=5000;const g=a.createGain();g.gain.value=.18;sN.connect(f);f.connect(g);g.connect(musicGain);sN.start(next)}
+   next+=beat;step++}},100)}
+ function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}if(musicGain){try{musicGain.disconnect()}catch(e){}musicGain=null}if(au){au.pause();au=null}}
+ function toggle(k){st[k]=!st[k];try{localStorage.setItem("vacancia-"+k,st[k]?"1":"0")}catch(e){}if(k==="music"){if(st.music)startMusic();else stopMusic()}}
+ function unlock(){if(st.started)return;st.started=true;ctx();if(st.music)startMusic()}
+ return{play,toggle,unlock,st,startMusic,stopMusic}})();
+document.addEventListener("pointerdown",()=>SND.unlock(),{once:false,capture:true});
+/* ---------- mascota: el otorongo ---------- */
+function otorongoSVG(size,mood,anim){if(ASSETS.otorongo)return`<img src="${ASSETS.otorongo}" alt="Otorongo" width="${size}" height="${size}">`;
+ const mouth=mood==="sad"?'<path d="M-18 34 Q0 22 20 34" fill="none" stroke="#1d1a17" stroke-width="4" stroke-linecap="round"/>':'<path d="M-18 28 Q0 40 20 26" fill="none" stroke="#1d1a17" stroke-width="4" stroke-linecap="round"/><path d="M6 32 L10 42 L14 31" fill="#fff" stroke="#1d1a17" stroke-width="3"/>';
+ return`<svg viewBox="-80 -80 160 160" width="${size}" height="${size}" aria-hidden="true" class="${anim?"oto":""}"><ellipse cx="0" cy="0" rx="62" ry="56" fill="#e9a23b" stroke="#1d1a17" stroke-width="5"/><circle cx="-44" cy="-46" r="17" fill="#e9a23b" stroke="#1d1a17" stroke-width="5"/><circle cx="44" cy="-46" r="17" fill="#e9a23b" stroke="#1d1a17" stroke-width="5"/><circle cx="-44" cy="-46" r="7" fill="#1d1a17"/><circle cx="44" cy="-46" r="7" fill="#1d1a17"/><g fill="#1d1a17"><circle cx="-30" cy="-28" r="5"/><circle cx="34" cy="-26" r="5"/><circle cx="-48" cy="2" r="4"/><circle cx="50" cy="6" r="4"/><circle cx="0" cy="-40" r="4"/></g><ellipse cx="-20" cy="-8" rx="13" ry="15" fill="#fff" stroke="#1d1a17" stroke-width="4"/><ellipse cx="20" cy="-8" rx="13" ry="15" fill="#fff" stroke="#1d1a17" stroke-width="4"/><circle class="pupil" cx="-16" cy="-4" r="6" fill="#1d1a17"/><circle class="pupil" cx="24" cy="-4" r="6" fill="#1d1a17"/><path d="M-34 -26 L-8 -20 M34 -26 L8 -20" stroke="#1d1a17" stroke-width="5" stroke-linecap="round"/><ellipse cx="0" cy="22" rx="30" ry="20" fill="#fbe8c4" stroke="#1d1a17" stroke-width="4"/><path d="M-8 12 L8 12 L0 20 Z" fill="#1d1a17"/>${mouth}<path d="M-58 30 L58 48 L54 62 L-62 44 Z" fill="#fff" stroke="#1d1a17" stroke-width="4"/><path d="M-20 37 L20 44 L17 57 L-23 50 Z" fill="#c8102e"/></svg>`}
+/* ---------- emblemas de bancada ---------- */
+function emblemPath(e,x,y,s){s=s||8;if(e==="sol"){let r=`<circle cx="${x}" cy="${y}" r="${s*.45}" fill="#fff"/>`;for(let i=0;i<8;i++){const a=Math.PI*i/4;r+=`<line x1="${(x+s*.7*Math.cos(a)).toFixed(1)}" y1="${(y+s*.7*Math.sin(a)).toFixed(1)}" x2="${(x+s*Math.cos(a)).toFixed(1)}" y2="${(y+s*Math.sin(a)).toFixed(1)}" stroke="#fff" stroke-width="${s*.2}" stroke-linecap="round"/>`}return r}
+ if(e==="montana")return`<path d="M${x-s} ${y+s*.6} L${x-s*.3} ${y-s*.6} L${x+s*.1} ${y} L${x+s*.45} ${y-s*.35} L${x+s} ${y+s*.6} Z" fill="#fff"/>`;
+ if(e==="ola")return`<path d="M${x-s} ${y-s*.1} q${s*.5} ${-s*.7} ${s} 0 t${s} 0 M${x-s} ${y+s*.5} q${s*.5} ${-s*.7} ${s} 0 t${s} 0" fill="none" stroke="#fff" stroke-width="${s*.24}" stroke-linecap="round"/>`;
+ if(e==="estrella"){const p=[];for(let i=0;i<10;i++){const a=-Math.PI/2+Math.PI*i/5,r=i%2?s*.45:s;p.push(`${(x+r*Math.cos(a)).toFixed(1)},${(y+r*Math.sin(a)).toFixed(1)}`)}return`<polygon points="${p.join(" ")}" fill="#fff"/>`}
+ if(e==="chakana"){const u=s*.34,q=[[-1,-3],[1,-3],[1,-1],[3,-1],[3,1],[1,1],[1,3],[-1,3],[-1,1],[-3,1],[-3,-1],[-1,-1]];return`<polygon points="${q.map(([a,b])=>(x+a*u).toFixed(1)+","+(y+b*u).toFixed(1)).join(" ")}" fill="#fff"/>`}return""}
+/* ---------- hemiciclo ilustrado ---------- */
+function hemi(s){const cx=300,cy=290;const pos=[];[{r:150,n:11},{r:228,n:15}].forEach(rw=>{for(let i=0;i<rw.n;i++){const a=Math.PI-(Math.PI*(i+.5)/rw.n);pos.push([cx+rw.r*Math.cos(a),cy-rw.r*Math.sin(a),a])}});pos.sort((p,q)=>q[2]-p[2]);
+ const seats=[];s.order.forEach(id=>{const p=P(s,id);for(let i=0;i<p.blocks;i++)seats.push({o:id})});const am=[];Object.entries(s.amarres||{}).forEach(([id,n])=>{for(let i=0;i<n;i++)am.push(id)});for(let i=0;i<s.neutral;i++)seats.push({o:null,am:am[i]||null});
+ const prev=ui.prevSeats||[];const now=seats.slice(0,26).map(x=>x.o||(x.am?"a:"+x.am:"-"));ui.prevSeats=now;
+ const g=seats.slice(0,26).map((st,k)=>{const[x,y]=pos[k];const p=st.o!=null?P(s,st.o):null;const col=p?p.color:"#b9b2a2";const changed=prev.length&&prev[k]!==now[k];
+  const ring=st.am?`stroke="${P(s,st.am).color}" stroke-width="5"`:(st.o===s.pres?'stroke="#c8102e" stroke-width="4"':'stroke="#1d1a17" stroke-width="2.5"');
+  return`<g class="${changed?"seatpop":""}" style="transform-origin:${x.toFixed(1)}px ${y.toFixed(1)}px"><circle cx="${x.toFixed(1)}" cy="${(y+3).toFixed(1)}" r="19" fill="rgba(0,0,0,.25)"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="19" fill="${col}" ${ring}><title>${p?esc(p.name):st.am?"Independiente amarrado por "+esc(nm(s,st.am)):"Independiente"} · 5 escaños</title></circle>${p&&p.emb?emblemPath(p.emb,+x.toFixed(1),+y.toFixed(1),9):`<text x="${x.toFixed(1)}" y="${(y+5).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">I</text>`}</g>`}).join("");
+ const sen=[];s.order.forEach(id=>{for(let i=0;i<P(s,id).sen;i++)sen.push(P(s,id).color)});for(let i=0;i<s.senN;i++)sen.push("#b9b2a2");
+ const sg=sen.map((c,i)=>`<circle cx="${212+i*16}" cy="318" r="6.5" fill="${c}" stroke="#1d1a17" stroke-width="1.5"/>`).join("");
+ return`<svg class="hemi" viewBox="40 36 520 296" role="img" aria-label="Hemiciclo de Diputados y Senado"><defs><pattern id="wd" width="30" height="10" patternUnits="userSpaceOnUse"><rect width="30" height="10" fill="#8a2a22"/><path d="M0 5 Q8 1 15 5 T30 5" stroke="#6e1f19" stroke-width="2" fill="none"/></pattern></defs>
+ <path d="M${cx-268} ${cy} A268 268 0 0 1 ${cx+268} ${cy} Z" fill="#ead7ad" stroke="#1d1a17" stroke-width="4"/>
+ <path d="M${cx-258} ${cy} A258 258 0 0 1 ${cx+258} ${cy} L${cx+198} ${cy} A198 198 0 0 0 ${cx-198} ${cy} Z" fill="url(#wd)" stroke="#1d1a17" stroke-width="3"/>
+ <path d="M${cx-180} ${cy} A180 180 0 0 1 ${cx+180} ${cy} L${cx+120} ${cy} A120 120 0 0 0 ${cx-120} ${cy} Z" fill="url(#wd)" stroke="#1d1a17" stroke-width="3"/>
+ <path d="M${cx-110} ${cy} A110 110 0 0 1 ${cx+110} ${cy} Z" fill="#f6ead0" stroke="#1d1a17" stroke-width="3"/>${g}
+ <rect x="${cx-80}" y="${cy-54}" width="160" height="40" rx="7" fill="#5a1a14" stroke="#1d1a17" stroke-width="3"/><text x="${cx}" y="${cy-27}" text-anchor="middle" class="fx-t" font-size="19" fill="#fff">${V2.TH.aprob} PARA VACAR</text>
+ <text x="${cx}" y="${cy-62}" text-anchor="middle" font-size="11" fill="#6b5a3e">+8 de 12 senadores</text>
+ <text x="202" y="322" text-anchor="end" font-size="11" fill="#6b5a3e" font-weight="700">SENADO</text>${sg}</svg>`}
+/* ---------- efectos: lectura de la bitácora ---------- */
+const FX={q:[],busy:false};
+function fxEnqueue(f){if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches&&f.kind!=="sound"){if(f.snd)SND.play(f.snd);return}FX.q.push(f);fxRun()}
+function fxRun(){if(FX.busy||!FX.q.length)return;const f=FX.q.shift();FX.busy=true;ui.fxBusy=["crisis","vote","stamp"].includes(f.kind);const L=document.getElementById("fxLayer");let dur=f.dur||1600;
+ if(f.kind==="sound"){SND.play(f.snd);dur=150}
+ else if(f.kind==="crisis"){const win=f.pow>=f.diff,max=Math.max(f.pow,f.diff,1);L.innerHTML=`<div class="fx-ov"><div class="fx-box"><div class="fx-t" style="font-size:26px">CRISIS · ${esc(f.name)}</div><div class="fx-dice">🎲</div>
+  <div class="fx-bar"><span>Poder</span><i style="--w:${Math.round(f.pow/max*100)}%;background:#2e8b57"></i><b>${f.pow}</b></div><div class="fx-bar"><span>Dificultad</span><i style="--w:${Math.round(f.diff/max*100)}%;background:#c8102e"></i><b>${f.diff}</b></div>
+  <div class="fx-res ${win?"ok":"ko"}">${win?"¡SUPERADA!":"¡FRACASO!"}</div>${f.pun?`<div class="fx-sub">🔪 Puñalada de ${esc(f.pun)}</div>`:""}</div></div>`;SND.play("dice");setTimeout(()=>SND.play(win?"applause":"boo"),1100);dur=2300}
+ else if(f.kind==="vote"){L.innerHTML=`<div class="fx-ov"><div class="fx-box"><div class="fx-t" style="font-size:24px">${esc(f.name)}</div><div class="fx-cards">${f.votes.map((v,i)=>`<div class="fx-vc" style="animation-delay:${.6+i*.45}s"><div class="fx-in"><div class="fx-fr">?</div><div class="fx-bk ${v.v}">${v.v==="si"?"A FAVOR":v.v==="no"?"EN CONTRA":"ABST."}</div></div><small>${esc(v.n)}</small></div>`).join("")}</div></div></div>`;
+  SND.play("drum");f.votes.forEach((v,i)=>setTimeout(()=>SND.play("flip"),600+i*450+300));dur=1200+f.votes.length*450+900}
+ else if(f.kind==="stamp"){L.innerHTML=`<div class="stamp"><div>${esc(f.text)}</div></div><div class="fx-money">${"💸".repeat(10).split("").map((c,i)=>i%2?"":`<span style="left:${Math.random()*90}%;animation-delay:${Math.random()*.6}s">💸</span>`).join("")}</div>`;SND.play("stamp");dur=2100}
+ else if(f.kind==="toast"){L.innerHTML=`<div class="fx-toast">${f.html}</div>`;if(f.snd)SND.play(f.snd);dur=f.dur||1400}
+ setTimeout(()=>{L.innerHTML="";FX.busy=false;ui.fxBusy=false;fxRun();if(!FX.busy&&typeof scheduleBots==="function")scheduleBots()},dur)}
+function fxScan(s){if(!s||s==="missing"||!s.log)return;const key=(s.gid||code||"x");if(ui.fxKey!==key){ui.fxKey=key;ui.fxLast=s.log.length?s.log[s.log.length-1]:null;ui.fxTurnKey="";return}
+ let start=0;if(ui.fxLast){let k=-1;for(let i=s.log.length-1;i>=0;i--){if(s.log[i].t===ui.fxLast.t&&s.log[i].y===ui.fxLast.y){k=i;break}}start=k>=0?k+1:Math.max(0,s.log.length-4)}
+ const fresh=s.log.slice(start);if(s.log.length)ui.fxLast=s.log[s.log.length-1];
+ let lastPun="";fresh.forEach(l=>{const t=l.t;let m;
+  if((m=t.match(/^Respuestas reveladas: (.*)\.$/))){const pz=m[1].split(", ").filter(x=>x.endsWith("¡apuñala!")).map(x=>x.replace(" ¡apuñala!",""));lastPun=pz.join(" y ")}
+  else if((m=t.match(/^Crisis «(.+)» (superada|fracasa) \((\d+) vs (\d+)\)/))){const mine=t.includes(nm(s,me));fxEnqueue(mine||lastPun?{kind:"crisis",name:m[1],pow:+m[3],diff:+m[4],pun:lastPun}:{kind:"toast",html:`${m[2]==="superada"?"✅":"❌"} Crisis «${esc(m[1])}» ${m[2]}`,snd:m[2]==="superada"?"coins":"boo"});lastPun=""}
+  else if((m=t.match(/^Votación «(.+)»: (.*)\.$/))){const votes=m[2].split(", ").map(x=>{const r=x.match(/^(.*) (a favor|en contra|abstención)$/);return r?{n:r[1],v:r[2]==="a favor"?"si":r[2]==="en contra"?"no":"abs"}:null}).filter(Boolean);fxEnqueue({kind:"vote",name:m[1],votes})}
+  else if(/^¡VACANCIA!/.test(t))fxEnqueue({kind:"stamp",text:"VACADO"});
+  else if(/RENUNCIA a la presidencia/.test(t))fxEnqueue({kind:"stamp",text:"RENUNCIA"});
+  else if(/^MENSAJE A LA NACIÓN/.test(t))fxEnqueue({kind:"toast",html:"📢 ¡MENSAJE A LA NACIÓN!",snd:"drum",dur:1400});
+  else if(/^¡El golpe triunfa/.test(t))fxEnqueue({kind:"stamp",text:"AUTOGOLPE"});
+  else if(/Gana la plancha de|GANA LA PRESIDENCIA|Segunda vuelta:/.test(t))fxEnqueue({kind:"toast",html:"🏛️ "+esc(t.split(".")[0]),snd:"gavel",dur:1600})});
+ if(s.phase==="turno"&&V2.current(s)===me){const k=s.year+":"+(s.leg||1)+":"+s.turn.idx;if(ui.fxTurnKey!==k){ui.fxTurnKey=k;fxEnqueue({kind:"sound",snd:"ping"})}}
+ if(s.phase==="fin"&&!ui.fxEnd){ui.fxEnd=true;SND.play(s.winner===me?"win":"lose")}}
+function soundToggles(){return`<button class="ghost" id="bsfx" title="Efectos" style="padding:6px 9px">${SND.st.sfx?"🔔":"🔕"}</button><button class="ghost" id="bmus" title="Música" style="padding:6px 9px">${SND.st.music?"🎵":"🔇"}</button>`}
+function bindSound(){const a=document.getElementById("bsfx"),b=document.getElementById("bmus");if(a)a.onclick=()=>{SND.toggle("sfx");render()};if(b)b.onclick=()=>{SND.unlock();SND.toggle("music");render()}}
+
+function roleTags(s,id){const p=P(s,id),t=[];if(id===s.pres)t.push(`<span class="tag p">${s.presType==="encargado"?"Presidente encargado":"Presidente"}</span>`);if(id===s.vp1)t.push('<span class="tag v">1.er VP</span>');if(id===s.vp2)t.push('<span class="tag v">2.º VP</span>');if(id===s.congreso)t.push('<span class="tag">Pdte. Congreso</span>');if(id===s.presSen&&id!==s.congreso)t.push('<span class="tag">Pdte. Senado</span>');if(id===s.presDip&&id!==s.congreso)t.push('<span class="tag">Pdte. Diputados</span>');if(p.min)t.push('<span class="tag">Ministro</span>');if(s.promesas&&s.promesas[id])t.push('<span class="tag">Promesa</span>');if(p.skip)t.push('<span class="tag">Inhabilitado</span>');if(id===s.premier)t.push(`<span class="tag v">Premier${s.premierOk?"":" (sin confianza aún)"}</span>`);Object.entries(s.comis||{}).forEach(([k,v])=>{if(v===id)t.push(`<span class="tag">Com. ${V2.COMIS[k].n}</span>`)});if(p.emb&&s.cfg.abilities!==false)t.push(`<span class="tag" title="${esc(V2.EMBINFO[p.emb].x)}">${({sol:"☀",montana:"⛰",ola:"🌊",estrella:"★",chakana:"✚"})[p.emb]} ${V2.EMBINFO[p.emb].n}</span>`);if(id===me)t.push('<span class="tag">tú</span>');return t.join("")}
+function players(s){return`<div class="tw"><table><thead><tr><th>Bancada</th><th><span class="lg">Bloques</span><span class="sm">Bloq.</span></th><th><span class="lg">Senad.</span><span class="sm">Sen.</span></th><th><span class="lg">Influencia</span><span class="sm">Inf.</span></th><th><span class="lg">Escánd.</span><span class="sm">Esc.</span></th><th><span class="lg">Cartas</span><span class="sm">Cart.</span></th></tr></thead><tbody>${s.order.map(id=>{const p=P(s,id);const cur=s.phase==="turno"&&V2.current(s)===id;return`<tr style="${cur?"background:color-mix(in srgb,var(--gold) 20%,transparent)":""}"><td><span class="dot" style="background:${p.color}"></span>${esc(p.name)}${p.bot?' <small class="muted">(bot)</small>':""}<br>${roleTags(s,id)}</td><td>${p.blocks}${V2.discolos(s,id)?` <small class="muted" title="Bloques díscolos: votan como independientes">(${V2.discolos(s,id)} díscolo${V2.discolos(s,id)>1?"s":""})</small>`:""}</td><td>${p.sen}</td><td>${p.inf}</td><td>${p.esc}</td><td>${p.hand.length}</td></tr>`}).join("")}
+ <tr><td><span class="dot" style="background:var(--neutral)"></span>Independientes</td><td>${s.neutral}</td><td>${s.senN}</td><td colspan="3" class="muted">${Object.values(s.amarres||{}).reduce((a,b)=>a+b,0)} amarrados este año</td></tr></tbody></table></div>`}
+function statusPanel(s){const su=V2.successor(s);return`<div class="panel" style="border-left:6px solid var(--red)"><h3>${s.pres!=null?(s.presType==="encargado"?"Presidente encargado: ":"Presidente: ")+esc(nm(s,s.pres)):"Sin presidente aún"}</h3>
+ ${V2.wear(s)?`<p class="muted" style="color:var(--red)">Desgaste: las Crisis del presidente tienen +${V2.wear(s)} de dificultad.</p>`:""}<p class="muted">Año ${s.year} de 5${s.leg?` · ${s.leg===1?"1.ª":"2.ª"} legislatura`:""} · Sucesor actual: <b>${esc(nm(s,su))}</b></p><div class="track">${[1,2,3,4,5].map(i=>`<span class="${i<=s.year?"on":""}"></span>`).join("")}</div>
+ <div class="stats" style="margin-top:8px"><div class="stat"><b>${s.aprob}</b><small>Aprobación</small></div><div class="stat"><b>${s.pres!=null?P(s,s.pres).esc:0}</b><small>Escánd. pdte.</small></div><div class="stat"><b>${Math.round(V2.weak(s)*100)}%</b><small>Indep. en contra</small></div><div class="stat"><b>${s.gabCens}/2</b><small>Gabinetes caídos</small></div></div>
+ ${s.lastEvent?`<p style="margin-top:6px"><small class="muted">Evento del año:</small> <b>${esc(s.lastEvent.n)}</b> (${esc(s.lastEvent.x)})</p>`:""}</div>`}
+function mineHand(s,ctx){const p=P(s,me);if(!p)return"";return`<div class="hand">${p.hand.map((k,i)=>{const c=V2.BOTIN[k];let btn="";
+ if(ctx==="action"&&c.when==="action"){const tgt=c.target?`<select data-t="${i}">${s.order.filter(x=>x!==me).map(x=>`<option value="${x}" ${ui.t[i]===x?"selected":""}>${esc(nm(s,x))}</option>`).join("")}</select>`:"";if(c.target&&(ui.t[i]==null||ui.t[i]===me))ui.t[i]=s.order.find(x=>x!==me);btn=`${tgt}<button data-card="${i}">Jugar</button>`}
+ else if(c.when==="passive")btn='<small class="muted">Se activa sola</small>';
+ else if(c.when==="vote")btn='<small class="muted">Se juega en una votación de vacancia</small>';
+ else if(c.when==="crisis_own")btn='<small class="muted">Se juega en tu Crisis</small>';else if(c.when==="crisis_other")btn='<small class="muted">Se juega en Crisis ajena</small>';
+ return`<div class="card t-${c.when}${c.sp?" sp":""}"><h3>${esc(c.n)}</h3><p>${esc(c.x)}</p>${btn}</div>`}).join("")||'<p class="muted">Sin cartas.</p>'}</div>`}
+function phaseView(s){const p=P(s,me);if(!p)return`<div class="banner">Estás mirando esta partida.</div>`;
+ if(s.phase==="fin")return`<div class="banner"><div style="display:flex;gap:12px;align-items:center">${otorongoSVG(80,s.winner===me?"":"sad")}<h2 style="margin:0">${s.winner===me?"¡Ganaste!":"Ganó "+esc(nm(s,s.winner))}</h2></div><p>${esc(nm(s,s.pres))} terminó con la banda (${s.presType==="electo"?"por elección":s.presType==="vp"?"por sucesión como vicepresidente":"como presidente encargado"}).${(s.agendaWins||[]).length?" Agendas secretas cumplidas: "+s.agendaWins.map(x=>esc(nm(s,x))+" ("+esc(V2.AGENDAS[P(s,x).agenda].n)+")").join(", ")+".":" Nadie cumplió su agenda secreta."}</p>${s.scores?`<table style="margin-top:6px"><thead><tr><th>Bancada</th><th>Banda</th><th>Agenda</th><th>Influencia</th><th>Escándalos</th><th>Puntos</th></tr></thead><tbody>${s.order.slice().sort((a,b)=>s.scores[b]-s.scores[a]).map(x=>`<tr${x===s.winner?' style="font-weight:700"':""}><td>${esc(nm(s,x))}</td><td>${x===s.pres?"+"+(s.scoreRule?s.scoreRule.banda+(s.presType==="electo"&&s.pres===s.elected?s.scoreRule.electo:0)+(s.presType==="vp"?(s.scoreRule.vp||0):0)+(s.presType==="encargado"?(s.scoreRule.encargado||0):0):4):"—"}</td><td>${(s.agendaWins||[]).includes(x)?"+"+(s.scoreRule?s.scoreRule.agenda:3):"—"} <small class="muted">${esc(V2.AGENDAS[P(s,x).agenda]?V2.AGENDAS[P(s,x).agenda].n:"")}</small></td><td>${P(s,x).inf} (+${Math.floor(P(s,x).inf/8)})</td><td>${P(s,x).esc} (−${Math.floor(P(s,x).esc/2)})</td><td><b>${s.scores[x]}</b></td></tr>`).join("")}</tbody></table>`:""}
+ ${(s.agendaWins||[]).filter(x=>x!==s.winner).map(x=>`<p><b>${esc(nm(s,x))}</b> cumplió su agenda secreta: <i>${esc(V2.AGENDAS[P(s,x).agenda].n)}</i>.</p>`).join("")}
+ ${(s.awards||[]).length?`<h3 style="margin-top:10px">Premios del quinquenio</h3><ul style="margin:4px 0 0 18px">${s.awards.map(a=>`<li><b>${esc(a.n)}:</b> ${esc(nm(s,a.id))} <span class="muted">(${esc(a.x)})</span></li>`).join("")}</ul>`:""}
+${(s.heads||[]).length?`<details style="margin-top:8px"><summary>Cronología del quinquenio (${s.heads.length} titulares)</summary><ol style="margin:4px 0 0 18px">${s.heads.map(h=>`<li><b>Año ${h.y}:</b> ${esc(h.t)}</li>`).join("")}</ol></details>`:""}
+<details><summary>Agendas secretas de todos</summary>${s.order.map(x=>P(s,x).agenda?`<p>${esc(nm(s,x))}: ${esc(V2.AGENDAS[P(s,x).agenda].n)} — ${(s.agendaWins||[]).includes(x)?"cumplida":"no cumplida"}</p>`:"").join("")}</details>${mode==="local"?'<button id="again">Jugar otra vez</button>':""}${supportButtons(false)}</div>${feedbackPanel()}`;
+ if(s.phase==="comisiones"){return`<div class="banner"><h3>Subasta de comisiones</h3><p>Puja en secreto por cada comisión. Gana la puja más alta y solo paga quien gana. Tienes <b>${p.inf}</b>.</p>
+  ${Object.entries(V2.COMIS).map(([k,c])=>`<p><b>${c.n}:</b> ${esc(c.x)}</p>`).join("")}
+  ${s.cbids&&s.cbids[me]?"<p>Tu puja está registrada.</p>":`<div class="row">${Object.entries(V2.COMIS).map(([k,c])=>`<label>${c.n} <input type="number" min="0" max="${p.inf}" value="0" id="cb_${k}" style="width:60px"></label>`).join("")}<button id="bcb">Pujar</button></div>`}
+  <p class="muted">${Object.keys(s.cbids||{}).length} de ${s.order.length} pujas.</p>${mode==="online"&&s.order.every(id=>s.cbids&&s.cbids[id])?'<button id="bcbres">Abrir sobres</button>':""}</div>`}
+ if(s.phase==="generales"){const opts=s.order.map(x=>`<option value="${x}">${x===me?"Postulo yo":"Me alío con "+esc(nm(s,x))}</option>`).join("");
+  return`<div class="banner"><h3>Elecciones generales</h3><p>Tienes <b>12</b> de Influencia. Reparte entre tu <b>lista al Congreso</b> (define tu bancada) y la <b>campaña presidencial</b>. La campaña también arrastra votos a tu lista (efecto arrastre). Lo que no gastes queda como Influencia inicial.</p>
+  <p>Tu carta de Campaña vale <b>${p.camp}</b>. Si te alías con otro candidato y su plancha gana, el aliado que más aportó es 1.er VP.</p>
+  ${s.gen[me]?`<p>Tu decisión está registrada: lista ${s.gen[me].list}, ${s.gen[me].bid.for===me?"postulas":"apoyas a "+esc(nm(s,s.gen[me].bid.for))} con ${s.gen[me].bid.amt}.</p>`:`<div class="row"><label>Lista al Congreso <input id="gl" type="number" min="0" max="12" value="6" style="width:70px"></label><select id="gf">${opts}</select><label>Aporte a la campaña <input id="ga" type="number" min="0" max="12" value="4" style="width:70px"></label><button id="bgen">Confirmar</button></div><p class="muted">Lista + aporte no pueden pasar de 12.</p>`}
+  <p class="muted">${Object.keys(s.gen).length} de ${s.order.length} decisiones.</p>${mode==="online"&&s.order.every(id=>s.gen[id])?'<button id="bgenres">Ver resultados</button>':""}</div>`}
+ if(s.phase==="segunda"){const R=s.runoff;const fin=me===R.a||me===R.b;const e=s.endorse[me];
+  return`<div class="banner"><h3>Segunda vuelta: ${esc(nm(s,R.a))} vs ${esc(nm(s,R.b))}</h3><p>Nadie superó la mitad de los votos en primera vuelta, así que van los dos más votados (${R.base[R.a]} y ${R.base[R.b]}). ${fin?"Puedes reforzar tu campaña con más Influencia.":"Decide a quién endosas y con cuánto. Solo pagan quienes apoyaron al ganador."}</p>
+  ${e?`<p>Tu decisión está registrada${e.amt?": "+e.amt+" a "+esc(nm(s,e.for)):""}.</p>`:`<div class="row">${fin?`<input type="hidden" id="ef" value="${me}">`:`<select id="ef"><option value="${R.a}">Endoso a ${esc(nm(s,R.a))}</option><option value="${R.b}">Endoso a ${esc(nm(s,R.b))}</option></select>`}<input id="ea" type="number" min="0" max="${p.inf}" value="${Math.floor(p.inf/3)}" style="width:80px"><button id="bend">Confirmar</button><span class="muted">Tienes ${p.inf}</span></div>`}
+  <p class="muted">${Object.keys(s.endorse).length} de ${s.order.length} decisiones.</p>${mode==="online"&&s.order.every(id=>s.endorse[id]!=null)?'<button id="bendres">Resultado de la segunda vuelta</button>':""}</div>`}
+ if(s.phase==="eleccion"){const opts=s.order.map(x=>`<option value="${x}">${x===me?"Postulo yo":"Me alío con "+esc(nm(s,x))}</option>`).join("");
+  return`<div class="banner"><h3>${s.year===0?"Elección presidencial":"Elecciones anticipadas"}</h3><p>Apoya tu candidatura o la de un aliado con Influencia. Tu carta de Campaña suma <b>${p.camp}</b>. Solo paga la plancha ganadora, y su mayor aliado será 1.er vicepresidente.</p>${s.bids[me]!=null?"<p>Tu decisión está registrada.</p>":`<div class="row"><select id="bf">${opts}</select><input id="bid" type="number" min="0" max="${p.inf}" value="${Math.floor(p.inf/2)}" style="width:80px"><button id="bbid">Confirmar</button><span class="muted">Tienes ${p.inf}</span></div>`}
+  <p class="muted">${Object.keys(s.bids).length} de ${s.order.length} decisiones.</p>${mode==="online"&&s.order.every(id=>s.bids[id]!=null)?'<button id="bres">Revelar resultado</button>':""}</div>`}
+
+ if(s.phase==="mesa"&&!s.cfg.mods.bicameral){const cands=s.order.filter(x=>x!==s.pres);
+  return`<div class="banner"><h3>Presidencia del Congreso · año ${s.year}</h3><p>Votan los bloques de Diputados. Quien la gane es el último eslabón de la sucesión y cobra +1.</p>${s.mesaVotes[me]!=null?`<p>Votaste por ${esc(nm(s,s.mesaVotes[me].dip))}.</p>`:`<div class="row">${cands.map(x=>`<button class="ghost" data-mesa1="${x}">${esc(nm(s,x))}</button>`).join("")}</div>`}<p class="muted">${Object.keys(s.mesaVotes).length} de ${s.order.length} votos.</p>${mode==="online"&&s.order.every(id=>s.mesaVotes[id]!=null)?'<button id="bmesa">Contar votos</button>':""}</div>`}
+ if(s.phase==="mesa"){const cands=s.order.filter(x=>x!==s.pres);const opt=k=>cands.map(x=>`<option value="${x}" ${ui[k]===x?"selected":""}>${esc(nm(s,x))}</option>`).join("");
+  return`<div class="banner"><h3>Mesas Directivas · año ${s.year}</h3><p>Cada cámara elige a su presidente: el Senado vota con senadores y Diputados con bloques. Este año preside el Congreso el de <b>${s.year%2===1?"el Senado":"Diputados"}</b>: es el último eslabón de la sucesión y cobra +1.</p>
+  ${s.mesaVotes[me]!=null?`<p>Votaste: Senado → ${esc(nm(s,s.mesaVotes[me].sen))}, Diputados → ${esc(nm(s,s.mesaVotes[me].dip))}.</p>`:`<div class="row"><label>Presidencia del Senado <select id="msen">${opt("msen")}</select></label><label>Presidencia de Diputados <select id="mdip">${opt("mdip")}</select></label><button id="bmv">Votar</button></div>`}
+  <p class="muted">${Object.keys(s.mesaVotes).length} de ${s.order.length} votos.</p>${mode==="online"&&s.order.every(id=>s.mesaVotes[id]!=null)?'<button id="bmesa">Contar votos</button>':""}</div>`}
+ if(s.phase==="crisis"){const c=s.crisis,card=V2.AGENDA[c.card],own=c.owner===me;const pow=V2.crisisPower(s),diff=V2.crisisDiff(s);
+  const resp=Object.keys(c.resp).length?"Ya respondieron (en secreto): "+Object.keys(c.resp).map(id=>esc(nm(s,id))).join(", "):"";
+  const basePow=P(s,c.owner).blocks+c.own+c.bonus,baseDiff=c.base+c.roll;
+  const pending=s.order.filter(id=>id!==c.owner&&!c.resp[id]);
+  let act="";if(own){act=`<div class="row">${p.hand.includes("refuerzo")?'<button class="ghost" id="boost">Jugar Bono de gestión (+3)</button>':""}${p.hand.includes("refuerzo")?`<button id="cres" ${pending.length?"disabled":""}>Resolver crisis</button><small class="muted">Decide si juegas tu Bono y luego resuelve.</small>`:'<small class="muted">Se resuelve sola cuando todos respondan.</small>'}</div>${pending.length?`<p class="muted">Esperando a: ${pending.map(x=>esc(nm(s,x))).join(", ")}</p>`:""}`}
+  else if(!c.resp[me]){act=`<div class="row"><button data-cr="apoyo">Apoyar (+${Math.ceil(p.blocks/2)})</button>${p.hand.includes("sabotaje")?'<button class="red" data-cr="sabotaje">Sabotear (+3 dificultad)</button>':""}${p.hand.includes("punalada")?'<button class="red" data-cr="punalada">Puñalada (finges apoyo)</button>':""}<button class="ghost" data-cr="pasar">Pasar</button></div><p class="muted">Todos responden en secreto y se revela al resolver. Si la Crisis se supera, quienes apoyan ganan +1.</p>`}
+  else act=`<p>Ya respondiste.</p>`;
+  return`<div class="banner"><h3>Crisis de ${esc(nm(s,c.owner))}: «${esc(card.n)}» (${esc(card.k)})</h3><p>Poder <b>${basePow}</b> contra dificultad <b>${baseDiff}</b>. Los apoyos y sabotajes suman en secreto y se revelan al final.</p><p class="muted">${resp||"Nadie ha respondido aún."}</p>${act}</div>`}
+ if(s.phase==="votacion"){const golpeVote=me===s.pres&&!s.golpeUsado&&s.cfg.mods.golpe&&s.mociones.some(m=>m.type==="vacancia")?`<p><button class="red" id="bgolpe">Mensaje a la Nación: disolver el Congreso antes de votar</button> <small class="muted">Respaldo: aprobación ${s.aprob} + dado + desprestigio ${V2.discredit(s)} ≥ 12.</small></p>`:"";const pend=s.order.filter(id=>s.mociones.some(m=>!s.votes[m.id][id]));
+  return`<div class="banner"><h3>Votaciones · ${s.leg===2?"2.ª":"1.ª"} legislatura del año ${s.year}</h3>${s.mociones.map(m=>{const v=s.votes[m.id][me];const {f,sf}=V2.tally(s,m);const need=m.type==="investidura"?`${V2.TH.simple} bloques a favor para otorgar la confianza`:(m.type==="ley"||m.type==="insistencia")?`${V2.TH.simple} bloques + 7 senadores`:m.type==="interpelacion"?`firmas ${V2.TH.interFirmas} y admisión con ${V2.TH.interAdm} bloques`:m.type==="gabinete"?`firmas ${V2.TH.censFirmas} y ${V2.TH.simple} bloques para aprobar`:m.type==="confianza"?`${V2.TH.simple} bloques a favor para otorgarla`:m.type==="vacancia"?`${V2.TH.aprob} bloques + ${V2.TH.senado} senadores`:m.type==="acusacion"?`${V2.TH.simple} bloques + ${V2.TH.acusSen} senadores`:`${V2.TH.simple} bloques`;
+   const fc=V2.forecast(s,m);return`<div style="margin:8px 0"><div class="muted" style="font-size:13px">Pronóstico: ${fc.sure+fc.indep} de ${fc.need} votos asegurados. ${fc.faltan?`Faltan ~${fc.faltan}.`:"¡Ya alcanzaría!"}</div><b>${esc(V2.MOC[m.type])}</b>${m.target!=null?" contra "+esc(nm(s,m.target)):""} · presenta ${esc(nm(s,m.by))} · necesita ${need}<br>${v?`<span class="muted">Tu voto (secreto hasta el conteo): ${v==="si"?"a favor":v==="abs"?"abstención":"en contra"}</span>`:`<button data-v="${m.id}:si" class="red">A favor</button> <button data-v="${m.id}:no" class="ghost">En contra</button> <button data-v="${m.id}:abs" class="ghost">Abstención</button>`}</div>`}).join("")}
+   ${me===s.pres&&s.presType!=="encargado"&&s.mociones.some(m=>m.type==="vacancia")?'<p><button class="ghost" id="bren">Renunciar antes de la votación</button> <small class="muted">Pierdes la banda, pero conservas tu Influencia, evitas los +2 escándalos del vacado y quedas protegido de acusaciones por dos legislaturas.</small></p>':""}
+   ${golpeVote}
+   ${me===s.pres&&p.hand.includes("fuga")&&s.mociones.some(m=>m.type==="vacancia")&&!s.fuga?'<p><button class="red" id="bfuga">Jugar ★ Fuga a medianoche</button></p>':""}${s.fuga?"<p><b>Fuga a medianoche en juego:</b> la vacancia fracasará.</p>":""}
+   <p class="muted" style="font-size:13px">El conteo es automático cuando todos votan${me===s.pres?". Si piensas renunciar o jugar una carta de votación, hazlo antes de emitir tu voto":""}.</p>
+   <p class="muted">${pend.length?"Faltan: "+pend.map(x=>esc(nm(s,x))).join(", "):"Todos votaron."}</p>${!pend.length?'<p><b>Contando votos…</b></p>':""}</div>`}
+ if(s.phase==="turno"){const cur=V2.current(s);if(cur!==me)return`<div class="banner">Turno de <b>${esc(nm(s,cur))}</b>.</div>`;
+  if(s.turn.step==="expediente")return`<div class="banner"><b>Tu turno.</b> Primero abre un expediente.<div class="row" style="margin-top:6px"><button id="bexp">Abrir expediente</button></div></div>`;
+  const isP=me===s.pres,su=V2.successor(s),fn=V2.freeNeutral(s);
+  const mocOpts=["vacancia","gabinete","acusacion","mesa","encargado"].filter(t=>!V2.P||true);
+  return`<div class="banner"><b>Tu acción política</b> (una por turno)${(()=>{const cs=p.hand.map((k,i)=>[k,i]).filter(([k])=>V2.BOTIN[k].when==="action");if(!cs.length)return"";return`<div style="margin-top:6px"><small class="muted">Tus cartas de acción:</small><div class="row">${cs.map(([k,i])=>{const c=V2.BOTIN[k];if(c.target&&(ui.t[i]==null||ui.t[i]===me))ui.t[i]=s.order.find(x=>x!==me);return`<span class="row" style="gap:4px">${c.target?`<select data-t="${i}" style="max-width:130px">${s.order.filter(x=>x!==me).map(x=>`<option value="${x}" ${ui.t[i]===x?"selected":""}>${esc(nm(s,x))}</option>`).join("")}</select>`:""}<button class="ghost" data-card="${i}" title="${esc(c.x)}">${esc(c.n)}</button></span>`}).join("")}</div></div>`})()}
+  <div class="row" style="margin-top:6px"><button data-a="fichar" ${p.inf<4||fn<1?"disabled":""}>Fichar independiente (4)</button>
+  <span class="row"><select id="amn">${Array.from({length:Math.max(1,Math.min(fn,Math.floor(p.inf/2)))},(_,k)=>`<option ${+ui.amarrar===k+1?"selected":""}>${k+1}</option>`).join("")}</select><button data-a="amarrar" ${fn<1||p.inf<2?"disabled":""}>Amarrar (2 c/u)</button></span>
+  <button data-a="control" ${p.inf<3||p.esc<1?"disabled":""}>Control de daños (3)</button>
+  ${isP&&s.gabCens>=2?'<button class="red" data-a="disolver">Disolver Diputados</button>':""}</div>
+  <div class="row" style="margin-top:6px"><select id="mt">${(s.cfg.mods.gobierno?[...(me===s.pres?[["confianza","Cuestión de confianza"]]:[]),["interpelacion","Interpelación (1)"],["vacancia","Vacancia"],["gabinete","Censura al gabinete"],["acusacion","Acusación constitucional"],["mesa","Censura a la Mesa"],["encargado","Censura al encargado"]]:[["vacancia","Vacancia"],["encargado","Censura al encargado"]]).map(([k,l])=>`<option value="${k}" ${ui.moc===k?"selected":""}>${l}</option>`).join("")}</select>
+  ${ui.moc==="acusacion"?`<select id="mtt">${s.order.filter(x=>x!==me&&x!==s.pres).map(x=>`<option value="${x}" ${ui.mocT===x?"selected":""}>${esc(nm(s,x))} (${P(s,x).esc} esc.)</option>`).join("")}</select>`:""}
+  <button class="red" data-a="mocion" ${p.inf<(ui.moc==="interpelacion"?1:2)?"disabled":""}>Presentar moción (${ui.moc==="interpelacion"?1:2})</button><button class="ghost" data-a="pasar">Terminar turno</button></div>${me===s.pres&&!s.golpeUsado&&s.cfg.mods.golpe?`<div class="row" style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)"><button class="red" id="bgolpe">Mensaje a la Nación: disolver el Congreso</button><small class="muted">Inconstitucional y de un solo intento. Triunfa si aprobación (${s.aprob}) + dado + desprestigio del Congreso (${V2.discredit(s)}) llega a 12: cierras ambas cámaras y se reparten de nuevo los escaños. Si fracasa, te vacan de inmediato.</small></div>`:""}</div>`}
+ return""}
+function myPanel(s){const p=P(s,me);if(!p||s.phase==="fin"||s.phase==="lobby")return"";let h=`<div class="panel"><h3>Tu bancada</h3>`;
+ if(p.emb&&s.cfg.abilities!==false)h+=`<p><b>${({sol:"☀",montana:"▲",ola:"🌊",estrella:"★",chakana:"✚"})[p.emb]||""} ${V2.EMBINFO[p.emb].n}:</b> ${esc(V2.EMBINFO[p.emb].x)}</p>`;
+ if(p.agenda){const a=V2.AGENDAS[p.agenda];h+=`<p><b>Agenda secreta:</b> <i>${esc(a.n)}</i> — ${esc(V2.agendaText(s,p.agenda))} <span class="muted">(${V2.agendaMet(s,me)?"hoy se cumpliría":"hoy no se cumpliría"})</span></p>`;
+  if(p.agenda==="kingmaker"){if(p.km!=null)h+=`<p class="muted">Tu elegido: ${esc(nm(s,p.km))}</p>`;else if(s.year<=1)h+=`<div class="row"><span>Elige en secreto a tu candidato:</span>${s.order.filter(x=>x!==me).map(x=>`<button class="ghost" data-km="${x}">${esc(nm(s,x))}</button>`).join("")}</div>`}}
+ if((s.pend||{})[me]>0&&p.hand.length<6&&["turno","crisis","mesa","votacion"].includes(s.phase)){h+=`<p style="margin-top:8px"><b>Pasos Perdidos:</b> tienes ${s.pend[me]} robo(s). Toma una carta visible o roba a ciegas.</p><div class="row">${(s.market||[]).map((k,i)=>`<button class="ghost" data-mk="${i}" title="${esc(V2.BOTIN[k].x)}">${esc(V2.BOTIN[k].n)}</button>`).join("")}<button data-mk="-1">Robar a ciegas</button></div>`}
+ else if((s.market||[]).length)h+=`<p class="muted" style="margin-top:6px">En los Pasos Perdidos: ${(s.market||[]).map(k=>esc(V2.BOTIN[k].n)).join(", ")}.</p>`;
+ if(s.premierPend===me&&me===s.pres)h+=`<p style="margin-top:8px"><b>Nombra a tu Premier (PCM):</b> puede ser un rival, incluso un ex presidente. Deberá pedir la confianza del Congreso; si tu gobierno llega al año 5, recibe +3 y limpia sus escándalos.</p><div class="row">${s.order.filter(x=>x!==me).map(x=>`<button class="ghost" data-pm="${x}">${esc(nm(s,x))}</button>`).join("")}</div>`;
+ return h+`</div>`}
+function sidePowers(s){const p=P(s,me);if(!p||s.phase==="fin"||s.phase==="lobby"||s.pres==null)return myPanel(s);let h=myPanel(s);
+ if(me===s.pres&&s.cfg.mods.gobierno&&["turno","mesa","crisis"].includes(s.phase)){h+=`<div class="panel"><h3>Tu gabinete</h3><p class="muted">Nombra hasta 3 ministros (acción libre). Cobran +1 por año, pero pueden saltar del barco.</p><div class="row">${s.order.filter(x=>x!==me).map(x=>`<button class="${P(s,x).min?"":"ghost"}" data-min="${x}" ${P(s,x).noMin?"disabled":""}>${P(s,x).min?"✓ ":""}${esc(nm(s,x))}</button>`).join("")}</div></div>`}
+ const pl=(s.laws||[]).filter(L=>L.state==="pendiente");if(me===s.pres&&pl.length&&["turno","mesa","crisis"].includes(s.phase)){h+=`<div class="panel"><h3>Leyes por promulgar</h3><p class="muted">Promulgar da el beneficio a su autor. Observar la devuelve: el Congreso puede insistir en la próxima legislatura (14 bloques + 7 senadores) y, si lo logra, pierdes 1 de Aprobación. Si no decides, al cambiar de legislatura la promulga el presidente del Congreso.</p>${pl.map(L=>`<div class="row" style="margin:4px 0">${L.kind&&L.kind!=="propio"?"<b>"+({prescripcion:"Prescripción exprés",autoblindaje:"Autoblindaje",reeleccion:"Reelección inmediata"})[L.kind]+"</b> (beneficia a todo el Congreso), de ":"Ley con nombre propio de "}<b>${esc(nm(s,L.by))}</b> <button data-law="${L.id}:0">Promulgar</button><button class="ghost" data-law="${L.id}:1">Observar</button></div>`).join("")}</div>`}
+ if(me===s.pres&&["turno","mesa","crisis"].includes(s.phase)){h+=`<div class="panel"><h3>Presupuesto de obras: ${s.budget}</h3><p class="muted">Asigna obras a la región de otra bancada (acción libre, +1 de Influencia por punto). No obliga a nadie, pero compra lealtades.</p><div class="row">${s.order.filter(x=>x!==me).map(x=>`<button class="ghost" data-obra="${x}" ${s.budget<1?"disabled":""}>+1 a ${esc(nm(s,x))}${s.obras[x]?" ("+s.obras[x]+")":""}</button>`).join("")}</div></div>`}
+ if(me===V2.successor(s)&&me!==s.pres&&["turno","crisis","mesa"].includes(s.phase)){h+=`<div class="panel"><h3>Pacto de sucesión</h3><p class="muted">Eres el siguiente en la línea. Promete ${s.cfg.mods.gobierno?"ministerios":"cargos"} a cambio de votos (acción libre, no obliga).</p><div class="row">${s.order.filter(x=>x!==me&&x!==s.pres).map(x=>`<button class="${s.promesas[x]?"":"ghost"}" data-prom="${x}" ${s.promesas[x]?"disabled":""}>${s.promesas[x]?"✓ ":""}${esc(nm(s,x))}</button>`).join("")}</div></div>`}
+ return h}
+function logView(s){return`<details class="panel" open><summary>Bitácora</summary><ol class="log" reversed>${s.log.slice().reverse().map(l=>`<li>${l.y?`<b>A${l.y}</b> `:""}${esc(l.t)}</li>`).join("")}</ol></details>`}
+let tickT=null,tickKey="";
+function timerBar(s){if(!s.cfg||!s.cfg.timer||s.phase!=="turno"||V2.current(s)!==me)return"";const k=s.year+":"+(s.leg||1)+":"+s.turn.idx;if(tickKey!==k){tickKey=k;ui.t0=Date.now()}
+ const left=Math.max(0,60-Math.floor((Date.now()-ui.t0)/1000));return`<div class="muted" style="margin-bottom:6px">⏱ Te quedan <b id="tleft">${left}</b> s en este turno</div>`}
+setInterval(()=>{if(!S||S==="missing"||!S.cfg||!S.cfg.timer||S.phase!=="turno"||V2.current(S)!==me||!ui.t0)return;const left=Math.max(0,60-Math.floor((Date.now()-ui.t0)/1000));const el=document.getElementById("tleft");if(el)el.textContent=left;
+ if(left===0&&!ui.timedOut){ui.timedOut=true;commit(s=>{if(s.phase!=="turno"||V2.current(s)!==me)return"__noop";if(s.turn.step==="expediente")V2.openExp(s,me);if(s.phase==="turno"&&s.turn.step==="accion")return V2.doAction(s,me,"pasar")}).then(()=>{ui.timedOut=false;ui.t0=Date.now()})}},1000);
+const COACH={
+ eleccion:["Elección presidencial","Aporta Influencia a tu candidatura o a la de un aliado. Si tu aliado gana y fuiste quien más aportó, serás su 1.er vicepresidente: el siguiente en la línea si lo vacan. Consejo: no gastes todo, la Influencia sirve después."],
+ mesa:["Presidencia del Congreso","Vota por quién preside el Congreso este año. Es el último eslabón de la sucesión: si caen el presidente y los vicepresidentes, asume como encargado."],
+ agenda:["Tu agenda secreta","Mira el panel de tu bancada: tienes un objetivo oculto. Si lo cumples al final, sumas puntos aunque no tengas la banda. La banda vale 4 (+1 si se ganó en las urnas) y la agenda 4."],
+ mercado:["Pasos Perdidos","Antes de tu expediente robas una carta de Botín: elige una de las 3 visibles o roba a ciegas."],
+ exped:["Tu turno","Primero abres un expediente de la Agenda: puede ser una Crisis, una Oportunidad o un Escándalo."],
+ crisisOwn:["Tu Crisis","Tu poder (bloques + dado) contra la dificultad. Los demás responden en secreto: pueden ayudarte… o apuñalarte. Todo se revela al resolver."],
+ crisisOther:["La Crisis de otro","Decide en secreto: apoyar (ganas +1 si la supera), sabotear con carta (+1 si fracasa) o pasar. Nadie sabe qué elegiste hasta el final."],
+ accion:["Tu acción política","Haz una sola acción: fichar independientes, amarrar votos, limpiar escándalos, jugar una carta o presentar una moción. Mira el recuadro «¿Qué puedo hacer?» para ideas. Tu primera moción de vacancia del año es gratis."],
+ votacion:["Votación secreta","Elige a favor, en contra o abstención. Revisa el pronóstico: dice cuántos votos faltan. Si la vacancia pasa, quienes votaron en contra caen con el gobierno; abstenerse te protege."],
+ presi:["Eres presidente","Reparte tu punto de obras a una bancada para comprar lealtad y cuida tus escándalos: los independientes votan contra un gobierno débil. Si ves venir la vacancia, puedes renunciar antes de la votación."],
+ fin:["Fin del quinquenio","Mira el recuento de puntos, los premios y la cronología. ¡Ya sabes jugar! Prueba después las expansiones."]};
+function coachKey(s){if(!ui.tutorial||!s||s==="missing")return null;const p=P(s,me);if(!p)return null;
+ if(s.phase==="fin")return"fin";if(s.phase==="eleccion"||s.phase==="generales")return"eleccion";if(s.phase==="mesa")return ui.seen.agenda?"mesa":"agenda";
+ if(s.phase==="crisis")return s.crisis.owner===me?"crisisOwn":"crisisOther";if(s.phase==="votacion")return"votacion";
+ if(s.phase==="turno"&&V2.current(s)===me){if(s.pend&&s.pend[me]>0)return"mercado";if(s.turn.step==="expediente")return"exped";if(s.pres===me&&!ui.seen.presi)return"presi";return"accion"}return null}
+function coach(s){const k=coachKey(s);if(!k||ui.seen[k])return"";const [h,x]=COACH[k];return`<div class="banner" style="border-color:var(--red);margin-bottom:10px;display:flex;gap:10px;align-items:flex-start">${otorongoSVG(64)}<div style="flex:1"><b>🎓 Tutorial · ${esc(h)}</b><p style="margin-top:4px">${esc(x)}</p><div class="row"><button id="bcoach" data-k="${k}">Entendido</button><button class="ghost" id="bcoachoff">Salir del tutorial</button></div></div></div>`}
+function headline(s){if(!s.head||s.phase==="fin")return"";const fresh=ui.lastHead!==s.head.t;ui.lastHead=s.head.t;return`<div class="news${fresh?"":" still"}">${otorongoSVG(46)}<div><div style="font-size:11px;letter-spacing:.14em;color:#c8102e;font-weight:700">EL DIARIO DEL PLENO · AÑO ${s.head.y}</div><div class="h">${esc(s.head.t)}</div></div></div>`}
+function assistant(s){const p=P(s,me);if(!p||s.phase!=="turno"||V2.current(s)!==me||s.turn.step!=="accion")return"";const tips=[];const pr=s.pres!=null?P(s,s.pres):null;const fn=V2.freeNeutral(s);
+ const atk=p.hand.filter(k=>["destape","audio","reportaje","video","camara","comision"].includes(k)).length;
+ if(me===V2.successor(s)&&me!==s.pres)tips.push("Eres el sucesor: promete cargos y presenta la vacancia cuando tengas los votos.");
+ if(pr&&me!==s.pres&&pr.esc>=2)tips.push(`El presidente tiene ${pr.esc} escándalos: los independientes se inclinan por vacarlo.`);
+ if(atk&&me!==s.pres)tips.push(`Tienes ${atk} carta(s) de ataque para golpear al gobierno.`);
+ if(p.esc>=2)tips.push(`Tienes ${p.esc} escándalos: 1 de tus bloques ya vota por su cuenta. Considera el control de daños (3).`);
+ if(p.inf>=4&&fn>0)tips.push(`Hay ${fn} independiente(s) libre(s): ficharlos te da votos permanentes.`);
+ if(me===s.pres&&fn>0&&p.inf>=2)tips.push("Amarra independientes antes de las votaciones: cada uno es un voto seguro este año.");
+ if(p.agenda)tips.push(`Tu agenda (${V2.AGENDAS[p.agenda].n}) ${V2.agendaMet(s,me)?"hoy se cumpliría":"hoy no se cumpliría"}.`);
+ if(s.cfg.freeMotion&&!(s.freeUsed&&s.freeUsed[me]))tips.push("Este año tu primera moción de vacancia o censura al encargado es gratis.");
+ return tips.length?`<details open style="margin-top:8px"><summary>¿Qué puedo hacer?</summary><ul style="margin:4px 0 0 18px">${tips.slice(0,4).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></details>`:""}
+function renderGame(){const s=S;
+ if(s==="missing"){$app.innerHTML=hero()+`<div class="panel"><p class="err">No existe esa partida.</p><button id="back">Volver</button></div>`;document.getElementById("back").onclick=leave;return}
+ const top=`<div class="row" style="justify-content:space-between;padding:4px 0 12px"><h2>Vacancia</h2><div class="row">${mode==="online"?`<span class="muted">Código</span><b style="letter-spacing:.12em">${esc(code)}</b>`:'<span class="muted">Contra bots</span>'}${supportButtons(true)}${soundToggles()}<button class="ghost" id="leave">Salir</button></div></div>`;
+ if(s.phase==="lobby"){$app.innerHTML=top+`<div class="panel"><h2>Sala</h2><p class="muted">Comparte el código <b>${esc(code)}</b> o el enlace de invitación. De 3 a 5 bancadas.</p><div class="row" style="margin:6px 0"><a href="https://wa.me/?text=${encodeURIComponent("¡Te reto a una partida de Vacancia! Entra aquí: "+inviteLink())}" target="_blank" rel="noopener"><button>Invitar por WhatsApp</button></a><button class="ghost" id="bcopy">Copiar enlace</button></div><ul>${s.order.map(id=>`<li>${esc(nm(s,id))}${P(s,id).bot?" (bot)":""}</li>`).join("")}</ul>
+  ${!P(s,me)?`<div class="row"><input id="jn" placeholder="Nombre de tu bancada" maxlength="24"><button id="bj">Unirme</button></div>`:""}
+  ${s.host===me?`<div class="row"><button class="ghost" id="addbot" ${s.order.length>=5?"disabled":""}>Añadir bot</button><button id="start" ${s.order.length<3?"disabled":""}>Empezar</button></div>`:'<p class="muted">Esperando al anfitrión.</p>'}</div>${ui.msg?`<p class="err">${esc(ui.msg)}</p>`:""}${rules()}`;
+  bind();return}
+ $app.innerHTML=top+(ui.msg&&ui.msg!=="__noop"?`<p class="err">${esc(ui.msg)}</p>`:"")+coach(s)+headline(s)+timerBar(s)+phaseView(s)+assistant(s)+`<div class="grid two" style="margin-top:12px"><div class="panel">${hemi(s)}${players(s)}</div><div class="grid">${statusPanel(s)}${sidePowers(s)}</div></div>`
+  +(P(s,me)?`<div class="panel" style="margin-top:12px"><h3>Tu mano</h3>${mineHand(s,s.phase==="turno"&&V2.current(s)===me&&s.turn.step==="accion"?"action":"")}</div>`:"")+`${afkPanel(s)}${chatPanel(s)}<div style="margin-top:12px">${logView(s)}</div>`+rules();
+ bind()}
+function waitingFor(s){if(!s||s==="missing")return[];const H=s.order.filter(id=>!P(s,id).bot);
+ if(s.phase==="turno")return H.filter(id=>id===V2.current(s));if(s.phase==="crisis")return H.filter(id=>id===s.crisis.owner?false:!s.crisis.resp[id]);
+ if(s.phase==="votacion")return H.filter(id=>s.mociones.some(m=>!s.votes[m.id][id]));if(s.phase==="mesa")return H.filter(id=>s.mesaVotes[id]==null);
+ if(s.phase==="eleccion")return H.filter(id=>s.bids[id]==null);if(s.phase==="generales")return H.filter(id=>!s.gen||!s.gen[id]);if(s.phase==="segunda")return H.filter(id=>s.endorse[id]==null);return[]}
+function afkPanel(s){if(mode!=="online"||s.phase==="fin")return"";let h="";const me2=P(s,me);
+ if(me2&&me2.bot&&me2.wasHuman)h+=`<div class="banner" style="margin-top:12px">Un bot está jugando por ti. <button id="bback">Volver a jugar</button></div>`;
+ const idle=s.lastWrite&&Date.now()-s.lastWrite>90000;const w=waitingFor(s).filter(id=>id!==me);
+ if(idle&&w.length&&me2&&!me2.bot)h+=`<div class="banner" style="margin-top:12px">${w.map(x=>esc(nm(s,x))).join(", ")} no responde${w.length>1?"n":""} hace más de 90 segundos. ${w.map(x=>`<button class="ghost" data-afk="${x}">Pasar ${esc(nm(s,x))} a un bot</button>`).join(" ")}</div>`;return h}
+const QUICK=["Te apoyo","Confía en mí","Hagamos un trato","Voto a favor","Me abstengo","¡Traidor!","Esto no queda así","Jajaja"];
+function chatPanel(s){if(mode!=="online"||!P(s,me))return"";const c=(s.chat||[]).slice(-8);return`<details class="panel" style="margin-top:12px" open><summary>Chat del Pleno</summary><div style="max-height:170px;overflow:auto;font-size:14px;margin:6px 0">${c.length?c.map(m=>`<div><b style="color:${P(s,m.id)?P(s,m.id).color:"inherit"}">${esc(nm(s,m.id))}:</b> ${esc(m.t)}</div>`).join(""):'<p class="muted">Nadie ha hablado aún. Negocia, promete… o miente.</p>'}</div>
+ <div class="row">${QUICK.map(q=>`<button class="ghost" data-q="${esc(q)}" style="padding:5px 9px;font-size:13px">${esc(q)}</button>`).join("")}</div><div class="row" style="margin-top:6px"><input id="chatx" maxlength="80" placeholder="Escribe (máx. 80)" style="flex:1;min-width:0"><button id="bchat">Enviar</button></div></details>`}
+function sendChat(t){t=(t||"").trim().slice(0,80);if(!t)return;commit(s=>{s.chat=s.chat||[];s.chat.push({id:me,t,y:s.year});if(s.chat.length>30)s.chat=s.chat.slice(-30)})}
+function bind(){const on=(id,f)=>{const e=document.getElementById(id);if(e)e.onclick=f};const all=(sel,f)=>document.querySelectorAll(sel).forEach(e=>e.onclick=()=>f(e));
+ on("bback",()=>commit(s=>{const p=P(s,me);if(!p||!p.wasHuman)return"No aplica.";p.bot=false;p.wasHuman=false}));
+ document.querySelectorAll("[data-afk]").forEach(e=>e.onclick=()=>{const x=e.dataset.afk;commit(s=>{const p=P(s,x);if(!p||p.bot)return"Ya es bot.";p.bot=true;p.wasHuman=true;V2.log&&V2.log(s,`${p.name} no respondía: un bot juega por su bancada.`)})});
+ document.querySelectorAll("[data-q]").forEach(e=>e.onclick=()=>sendChat(e.dataset.q));
+ on("bchat",()=>{const i=document.getElementById("chatx");sendChat(i.value)});
+ on("bcopy",()=>{const l=inviteLink();try{navigator.clipboard.writeText(l);ui.msg="Enlace copiado: "+l}catch(e){ui.msg=l}render()});
+ on("leave",()=>{ui.tutorial=false;leave()});
+ on("bfb",()=>{const d=+((document.querySelector('input[name="fbd"]:checked')||{}).value||4);const so=document.getElementById("fbs").value.slice(0,500),fa=document.getElementById("fbf").value.slice(0,500);
+  Net.saveFeedback({version:VERSION,mods:Object.keys(S.cfg.mods).filter(m=>S.cfg.mods[m]),jugadores:S.order.length,diversion:d,sobra:so,falta:fa}).then(()=>{lsSet("cinco-fb-"+(S.gid||"x"),"1");render()}).catch(()=>{ui.msg="No se pudo enviar. Intenta más tarde.";render()})});
+ on("bcoach",()=>{const k=document.getElementById("bcoach").dataset.k;ui.seen[k]=true;render()});
+ on("bcoachoff",()=>{ui.tutorial=false;render()});on("again",()=>newLocal(P(S,"h").name,S.order.length-1,S.cfg.mods,{rapido:!!(S.opts&&S.opts.rapido),timer:!!S.cfg.timer}));
+ on("bj",()=>commit(s=>{if(s.phase!=="lobby")return"Ya empezó.";if(s.players[uid])return null;if(s.order.length>=5)return"Llena.";s.players[uid]={name:document.getElementById("jn").value.trim().slice(0,24)||"Bancada "+(s.order.length+1),bot:false};s.order.push(uid)}));
+ on("addbot",()=>commit(s=>{if(s.order.length>=5)return"Llena.";const id="bot"+s.order.length;const bn=["Bancada Naranja","Frente Andino","Alianza del Pueblo","Renovación Costeña","Poder Regional"];s.players[id]={name:bn[s.order.length-1]||id,bot:true};s.order.push(id)}));
+ on("start",()=>commit(s=>{if(s.order.length<3)return"Mínimo 3.";const o=s.opts||{};V2.setup(s,{mods:s.mods||BASEMODS,rapido:!!o.rapido});s.cfg.timer=!!o.timer;s.t0=Date.now();s.gid=code+"-"+s.t0}));
+ on("bbid",()=>{const n=+document.getElementById("bid").value,f=document.getElementById("bf").value;commit(s=>{if(s.phase!=="eleccion")return"No es elección.";s.bids[me]={for:f,amt:Math.max(0,Math.min(P(s,me).inf,n|0))};if(mode==="local"&&s.order.every(id=>s.bids[id]!=null))V2.resolveElection(s)})});
+ on("bgen",()=>{const l=+document.getElementById("gl").value,f=document.getElementById("gf").value,a=+document.getElementById("ga").value;if(l+a>12){ui.msg="Lista + aporte no pueden pasar de 12.";render();return}commit(s=>{if(s.phase!=="generales")return"Ya pasaron las elecciones.";V2.submitGen(s,me,l,f,a);if(mode==="local"&&s.order.every(id=>s.gen[id]))V2.resolveGenerales(s)})});
+ on("bend",()=>{const f=document.getElementById("ef").value,a=+document.getElementById("ea").value;commit(s=>{const e=V2.endorse(s,me,f,a);if(e)return e;if(mode==="local"&&s.order.every(id=>s.endorse[id]!=null))V2.resolveElection(s)})});
+ on("bendres",()=>commit(s=>{if(s.phase!=="segunda"||!s.order.every(id=>s.endorse[id]!=null))return"Faltan decisiones.";V2.resolveElection(s)}));
+ on("bgenres",()=>commit(s=>{if(s.phase!=="generales"||!s.order.every(id=>s.gen[id]))return"Faltan decisiones.";V2.resolveGenerales(s)}));
+ all("[data-law]",e=>{const [lid,o]=e.dataset.law.split(":");commit(s=>V2.decideLaw(s,me,lid,o==="1"))});
+ on("bgolpe",()=>{if(!confirm("Vas a disolver el Congreso de forma inconstitucional. Si no tienes respaldo, te vacan en el acto. ¿Continuar?"))return;commit(s=>V2.autogolpe(s,me))});
+ document.querySelectorAll("[data-km]").forEach(e=>e.onclick=()=>commit(s=>V2.setKingmaker(s,me,e.dataset.km)));
+ document.querySelectorAll("[data-mk]").forEach(e=>e.onclick=()=>commit(s=>V2.takeCard(s,me,+e.dataset.mk)));
+ document.querySelectorAll("[data-pm]").forEach(e=>e.onclick=()=>commit(s=>V2.setPremier(s,me,e.dataset.pm)));
+ on("bcb",()=>{const b={};["fisc","presu","const"].forEach(k=>b[k]=+document.getElementById("cb_"+k).value||0);commit(s=>{if(s.phase!=="comisiones")return"La subasta terminó.";const e=V2.bidComis(s,me,b);if(e)return e;if(mode==="local"&&s.order.every(id=>s.cbids[id]))V2.resolveComis(s)})});
+ on("bcbres",()=>commit(s=>{if(s.phase!=="comisiones"||!s.order.every(id=>s.cbids[id]))return"Faltan pujas.";V2.resolveComis(s)}));
+ on("bren",()=>{if(!confirm("¿Seguro que renuncias a la presidencia?"))return;commit(s=>V2.resign(s,me))});
+ on("bfuga",()=>commit(s=>V2.playVoteCard(s,me,"fuga")));
+ all("[data-obra]",e=>commit(s=>V2.giveObras(s,me,e.dataset.obra,1)));
+ const ms=document.getElementById("msen"),md=document.getElementById("mdip");if(ms){ui.msen=ms.value;ui.mdip=md.value;ms.onchange=()=>ui.msen=ms.value;md.onchange=()=>ui.mdip=md.value}
+ document.querySelectorAll("[data-mesa1]").forEach(e=>e.onclick=()=>{const x=e.dataset.mesa1;commit(s=>{if(s.phase!=="mesa")return"No es momento.";const er=V2.setMesaVote(s,me,x,x);if(er)return er;if(mode==="local"&&s.order.every(id=>s.mesaVotes[id]!=null))V2.resolveMesa(s)})});
+ on("bmv",()=>{const a=ui.msen,b=ui.mdip;commit(s=>{if(s.phase!=="mesa")return"No es momento.";const e=V2.setMesaVote(s,me,a,b);if(e)return e;if(mode==="local"&&s.order.every(id=>s.mesaVotes[id]!=null))V2.resolveMesa(s)})});
+ on("bres",()=>commit(s=>{if(s.phase!=="eleccion"||!s.order.every(id=>s.bids[id]!=null))return"Faltan pujas.";V2.resolveElection(s)}));
+
+ on("bmesa",()=>commit(s=>{if(s.phase!=="mesa")return"Ya se resolvió.";if(!s.order.every(id=>s.mesaVotes[id]!=null))return"Faltan votos.";V2.resolveMesa(s)}));
+ on("bexp",()=>commit(s=>{if(s.phase!=="turno"||V2.current(s)!==me||s.turn.step!=="expediente")return"No te toca.";V2.openExp(s,me)}));
+ all("[data-cr]",e=>commit(s=>{if(s.phase!=="crisis")return"Ya no hay crisis.";return V2.crisisRespond(s,me,e.dataset.cr)||(e.dataset.cr==="pasar"?(s.crisis.resp[me]="pasar",null):null)}));
+ on("boost",()=>commit(s=>s.phase!=="crisis"?"Ya no hay crisis.":V2.crisisBoost(s,me)));
+ on("cres",()=>commit(s=>{if(s.phase!=="crisis"||s.crisis.owner!==me)return"No te toca.";if(s.order.some(id=>id!==me&&!s.crisis.resp[id]))return"Faltan respuestas.";V2.crisisResolve(s)}));
+ all("[data-a]",e=>{const a=e.dataset.a;const arg=a==="amarrar"?ui.amarrar:a==="mocion"?ui.moc:null;const arg2=a==="mocion"&&ui.moc==="acusacion"?(document.getElementById("mtt")?.value??null):null;commit(s=>{if(s.phase!=="turno"||V2.current(s)!==me||s.turn.step!=="accion")return"No te toca.";return V2.doAction(s,me,a,arg,arg2)})});
+ all("[data-card]",e=>{const i=+e.dataset.card;const t=ui.t[i]??null;commit(s=>{if(s.phase!=="turno"||V2.current(s)!==me||s.turn.step!=="accion")return"No te toca.";ui.t={};return V2.doAction(s,me,"carta",i,t)})});
+ document.querySelectorAll("[data-t]").forEach(el=>el.onchange=()=>ui.t[el.dataset.t]=el.value);
+ const amn=document.getElementById("amn");if(amn)amn.onchange=()=>ui.amarrar=amn.value;
+ const mt=document.getElementById("mt");if(mt)mt.onchange=()=>{ui.moc=mt.value;render()};
+ const mtt=document.getElementById("mtt");if(mtt){if(!ui.mocT)ui.mocT=mtt.value;mtt.onchange=()=>ui.mocT=mtt.value}
+ all("[data-v]",e=>{const [mid,v]=e.dataset.v.split(":");commit(s=>{if(s.phase!=="votacion")return"No hay votación.";if(s.votes[mid][me])return"Ya votaste.";s.votes[mid][me]=v})});
+ on("bvres",()=>commit(s=>{if(s.phase!=="votacion")return"Ya se resolvió.";if(!s.order.every(id=>s.mociones.every(m=>s.votes[m.id][id])))return"Faltan votos.";V2.resolveVotes(s)}));
+ all("[data-min]",e=>{const x=e.dataset.min;commit(s=>V2.setCabinet(s,me,x,!P(s,x).min))});
+ all("[data-prom]",e=>commit(s=>V2.promise(s,me,e.dataset.prom)));
+}
+const VERSION=(window.CINCO_CONFIG||{}).version||"Beta";
+function afterChange(){if(!S||S==="missing"||S.phase!=="fin"||!S.gid)return;const isHost=mode==="local"||S.host===uid;if(!isHost||!db)return;
+ const k="cinco-stats-"+S.gid;if(lsGet(k))return;lsSet(k,"1");
+ const st=S.stats||{};const route=S.winner===S.pres?(S.pres===S.elected?"electo":S.presType):"agenda";
+ Net.saveStats({version:VERSION,mods:Object.keys(S.cfg.mods).filter(m=>S.cfg.mods[m]),jugadores:S.order.length,bots:S.order.filter(id=>P(S,id).bot).length,
+  cambios:(st.vac||0)+(st.renuncias||0)+(st.encCens||0),ruta:route||"",turnos:st.turnos||0,minutos:S.t0?Math.round((Date.now()-S.t0)/60000):0,
+  stats:{vac:st.vac||0,ren:st.renuncias||0,cartas:st.cartas||0,mociones:st.mociones||0,sab:st.sab||0,pun:st.pun||0,golpes:st.golpes||0,leyes:st.leyes||0}}).catch(()=>{})}
+function feedbackPanel(){if(!S||S==="missing"||S.phase!=="fin")return"";const k="cinco-fb-"+(S.gid||"x");
+ if(lsGet(k))return`<div class="panel" style="margin-top:12px"><p>¡Gracias por tu opinión! Con ella ajustamos las reglas.</p></div>`;
+ if(!db)return`<div class="panel" style="margin-top:12px"><h3>¿Qué tal la partida?</h3><p>Cuéntale a quien te compartió el juego: ¿fue divertido?, ¿qué regla sobra o confunde?, ¿qué le faltó?</p></div>`;
+ return`<div class="panel" style="margin-top:12px"><h3>¿Qué tal la partida?</h3><p class="muted" style="font-size:13px">Tus respuestas son anónimas y nos ayudan a ajustar el juego.</p>
+ <div class="row"><span>¿Qué tan divertida fue?</span>${[1,2,3,4,5].map(n=>`<label><input type="radio" name="fbd" value="${n}" ${n===4?"checked":""}> ${n}</label>`).join("")}</div>
+ <p style="margin-top:8px">¿Qué regla sobra o confunde?</p><input id="fbs" maxlength="500" style="width:100%">
+ <p style="margin-top:8px">¿Qué le faltó?</p><input id="fbf" maxlength="500" style="width:100%">
+ <div class="row" style="margin-top:8px"><button id="bfb">Enviar opinión</button></div></div>`}
+function render(){if(!mode){renderStart();bindSound();bindSupport();return}if(!S){$app.innerHTML=hero()+'<p class="muted">Abriendo partida…</p>';return}renderGame();bindSound();bindSupport();try{fxScan(S)}catch(e){console.warn(e)}}
+boot();
+</script></body></html>
